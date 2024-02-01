@@ -1,0 +1,92 @@
+nav {
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    top: 0%;
+    bottom: 0%;
+    height: 80px;
+    background: #FFFFFF;
+    box-shadow: 0px 1px 10px 1px rgba(0, 0, 0, 0.1);
+}
+
+.menubuttonhover {
+    position: absolute;
+    left: 2.57%;
+    right: 95.76%;
+    top: 35%;
+    bottom: 35%;
+}
+
+.completelogo {
+position: absolute;
+left: 150px;
+top: 14px;
+}
+
+.divisionlineleft {
+    position: absolute;
+    width: 46px;
+    left: 276px;
+    border: 1px solid #D4D4D4;
+    transform: rotate(90deg);
+}
+
+.sitetitle {
+    position: absolute;
+    left: 320px;
+    top: 18px;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 20px;
+    color: #212121;
+}
+
+.versiontitle {
+    position: absolute;
+    left: 320px;
+    top: 43px;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 20px;
+    color: #9E9E9E;
+}
+
+.dadosuser {
+    position: absolute;
+    left: 60%;
+    right: 10.8%;
+    top: 12.5%;
+    bottom: 58.75%;
+    font-style: normal;
+    font-size: 15px;
+    line-height: 20px;
+    text-align: right;
+    color: #0C8BB0;
+}
+
+.iconeperfil {
+    position: absolute;
+    left: 92.5%;
+    right: 8.06%;
+    top: 35%;
+    bottom: 35%;
+}
+
+.divisionlineright {
+    position: absolute;
+    width: 28px;
+    left: 94%;
+    right: 4.51%;
+    border: 1px solid #D4D4D4;
+    transform: rotate(90deg);
+}
+
+.iconelogout {
+    position: absolute;
+    left: 95.76%;
+    right: 2.57%;
+    top: 35%;
+    bottom: 35%;
+}
