@@ -1,18 +1,18 @@
 .footerbackground {
-
-position: absolute;
-height: 55.93px;
-left: 0%;
-right: 0%;
-bottom: 0%;
-margin: 0%;
-
-background: #212121;
+    position: absolute;
+    height: 55.93px;
+    left: 0%;
+    right: 0%;
+    bottom: 0%;
+    margin: 0%;
+    display: flex;
+    justify-content: center;
+    background: #212121;
 
 }
 
 .logocnj {
     position: absolute;
-    left: 47.16%;
     bottom: 12.45px;
+    
 }
