@@ -1,0 +1,10 @@
+.menubackground {
+    position: absolute;
+    left: 0%;
+    right: 82.64%;
+    top: 80px;
+    bottom: 0%;
+    background: #FAFAFA;
+    box-shadow: 2px 0px 10px 1px rgba(0, 0, 0, 0.1);
+    
+    }

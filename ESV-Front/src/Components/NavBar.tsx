@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import './NavBar.css'
+import MenuBar from './MenuBar/MenuBar'
+import Footer from './Footer/Footer'
 
 // Assets
 import MenuButtonHover from '../assets/menu-button-hover.png'
@@ -11,6 +13,9 @@ function NavBar() {
 
   return (
     <>
+      <MenuBar />
+      <Footer />
+
       <nav className='navbar bg-body-tertiary'>
         <a href="">
           <img src={MenuButtonHover} alt="Menu Button Hover" className='menubuttonhover'/>
@@ -29,7 +34,7 @@ function NavBar() {
 
         <h2 className='dadosuser'> <b>Nome Sobrenome (Administrador do sistema)</b> <br />
         000.000.000-00 <br />
-        Escritório Social do ??????????????????
+        Escritório Social do(a) ??????????????????
         </h2> 
         {/* ver depois a melhor formatação dos dados do usuário */}
 
@@ -43,6 +48,7 @@ function NavBar() {
           <img src={IconeLogout} alt="Logout" className='iconelogout'/>
         </a>
       </nav>
+
     </>
   )
 }
