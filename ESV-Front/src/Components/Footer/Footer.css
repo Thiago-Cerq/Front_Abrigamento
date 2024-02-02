@@ -1,4 +1,4 @@
-.footerbackground {
+.footer-background {
     position: absolute;
     height: 55.93px;
     left: 0%;
@@ -7,12 +7,10 @@
     margin: 0%;
     display: flex;
     justify-content: center;
+    align-items: center;
     background: #212121;
-
 }
 
-.logocnj {
-    position: absolute;
-    bottom: 12.45px;
-    
+.logo-cnj {
+    position: relative;
 }

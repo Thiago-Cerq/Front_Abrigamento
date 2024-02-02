@@ -11,42 +11,47 @@ import IconeLogout from '../assets/icone-logout.png'
 
 function NavBar() {
 
+  const [open, setOpen] = useState(false)
+
   return (
     <>
       <MenuBar />
+
       <Footer />
 
       <nav className='navbar bg-body-tertiary'>
-        <a href="">
-          <img src={MenuButtonHover} alt="Menu Button Hover" className='menubuttonhover'/>
-        </a>
 
-        <a href="">
-          <img src={CompleteLogo} alt="Logo ESVirtual" className='completelogo'/>
-        </a>
-
-        <div className='divisionlineleft'></div>
-
-        <div className='titlediv'>
-          <h1 className='sitetitle'>Escritório Social Virtual | Plataforma Web</h1>
-          <h1 className='versiontitle'>(Versão 0.0.0)</h1>
+        <div onClick={() => {setOpen(!open)}}>
+          <div className={`menu-trigger ${open? 'active' : 'inactive'}`}>
+          <img src={MenuButtonHover} alt="Menu Button Hover" className='menu-button-hover'/>
+          </div>
         </div>
 
-        <h2 className='dadosuser'> <b>Nome Sobrenome (Administrador do sistema)</b> <br />
+        <div className='title-div'>
+          <a href="">
+            <img src={CompleteLogo} alt="Logo ESVirtual" className='complete-logo'/>
+          </a>
+
+          <div className='division-line-left'></div>
+          <h1 className='site-title'>Escritório Social Virtual | Plataforma Web</h1>
+          <h1 className='version-title'>(Versão 0.0.0)</h1>
+        </div>
+
+        <h2 className='data-user'> <b>Nome Sobrenome (Administrador do sistema)</b> <br />
         000.000.000-00 <br />
         Escritório Social do(a) ??????????????????
         </h2> 
         {/* ver depois a melhor formatação dos dados do usuário */}
 
-        <a href="">
-          <img src={IconePerfil} alt="Perfil" className='iconeperfil'/>
-        </a>
-
-        <div className='divisionlineright'></div>
-
-        <a href="">
-          <img src={IconeLogout} alt="Logout" className='iconelogout'/>
-        </a>
+        <div className='perfil-logout-div'>
+          <a href="">
+            <img src={IconePerfil} alt="Perfil" className='icon-perfil'/>
+          </a>
+          <div className='division-line-right'></div>
+          <a href="">
+            <img src={IconeLogout} alt="Logout" className='icon-logout'/>
+          </a>
+        </div>
       </nav>
 
     </>
