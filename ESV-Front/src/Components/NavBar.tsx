@@ -4,29 +4,14 @@ import MenuBar from './MenuBar/MenuBar'
 import Footer from './Footer/Footer'
 
 // Assets
-import MenuButtonHover from '../assets/menu-button-hover.png'
 import CompleteLogo from '../assets/complete-logo.png'
 import IconePerfil from '../assets/icone-perfil.png'
 import IconeLogout from '../assets/icone-logout.png'
 
 function NavBar() {
 
-  // Dropdown Menu
-  const [open, setOpen] = useState(false)
-
   return (
     <>
-      <div>
-        <div onClick={() => {setOpen(!open)}}>
-          <img src={MenuButtonHover} alt="Menu Button Hover" className='menu-button-hover'/>
-        </div>
-
-        <div className={`menu-trigger ${open? 'active' : 'inactive'}`}>
-            <MenuBar />
-          </div>
-      </div>
-
-      <Footer />
 
       <nav className='navbar bg-body-tertiary'>
 
