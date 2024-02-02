@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { Outlet } from 'react-router-dom'
 import './Components.css'
 import NavBar from './NavBar'
 import MenuBar from './MenuBar/MenuBar'
@@ -28,6 +29,7 @@ function Components() {
       </div>
 
       <NavBar />
+      <Outlet />
       <Footer />
 
     </>
