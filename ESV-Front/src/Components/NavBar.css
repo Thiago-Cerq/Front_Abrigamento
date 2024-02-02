@@ -9,28 +9,6 @@ nav {
     box-shadow: 0px 3px 10px 1px rgba(0, 0, 0, 0.1);
 }
 
-.menu-button-hover {
-    position: absolute;
-    left: 2.57%;
-    top: 29px;
-    cursor: pointer;
-    z-index: 1;
-}
-
-/* CSS Menu Trigger */
-
-.menu-trigger.active {
-    opacity: 1;
-    visibility: visible;
-}
-
-.menu-trigger.inactive {
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* CSS Menu Trigger */
-
 .title-div {
     position: absolute;
     display: flex;

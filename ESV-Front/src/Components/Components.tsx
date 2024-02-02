@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
+import './Components.css'
 import NavBar from './NavBar'
 import MenuBar from './MenuBar/MenuBar'
 import Footer from './Footer/Footer'
 
 // Assets
 import MenuButtonHover from '../assets/menu-button-hover.png'
+import MenuCloseHover from '../assets/menu-close-hover.png'
 
 function Components() {
 
@@ -13,9 +15,11 @@ function Components() {
 
   return (
     <>
+
       <div>
         <div onClick={() => {setOpen(!open)}}>
-          <img src={MenuButtonHover} alt="Menu Button Hover" className='menu-button-hover'/>
+          <img src={MenuButtonHover} alt="Menu Button Hover" className={`menu-button-hover ${open? 'active' : 'inactive'}`}/>
+          <img src={MenuCloseHover} alt="Menu Button Hover" className={`menu-close-hover ${open? 'active' : 'inactive'}`}/>
         </div>
 
         <div className={`menu-trigger ${open? 'active' : 'inactive'}`}>
@@ -23,8 +27,8 @@ function Components() {
           </div>
       </div>
 
-      <Footer />
       <NavBar />
+      <Footer />
 
     </>
   )

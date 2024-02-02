@@ -1,0 +1,47 @@
+.menu-button-hover {
+    position: absolute;
+    left: 2.57%;
+    top: 29px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.menu-button-hover.active {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.menu-button-hover.inactive {
+    opacity: 1;
+    visibility: visible;
+}
+
+.menu-close-hover {
+    position: absolute;
+    left: 2.57%;
+    top: 29px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.menu-close-hover.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.menu-close-hover.inactive {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* CSS Menu Trigger */
+
+.menu-trigger.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.menu-trigger.inactive {
+    opacity: 0;
+    visibility: hidden;
+}
