@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './NavBar.css'
 import MenuBar from './MenuBar/MenuBar'
 import Footer from './Footer/Footer'
@@ -11,21 +11,25 @@ import IconeLogout from '../assets/icone-logout.png'
 
 function NavBar() {
 
+  // Dropdown Menu
   const [open, setOpen] = useState(false)
 
   return (
     <>
-      <MenuBar />
+      <div>
+        <div onClick={() => {setOpen(!open)}}>
+          <img src={MenuButtonHover} alt="Menu Button Hover" className='menu-button-hover'/>
+        </div>
+
+        <div className={`menu-trigger ${open? 'active' : 'inactive'}`}>
+            <MenuBar />
+          </div>
+      </div>
 
       <Footer />
 
       <nav className='navbar bg-body-tertiary'>
 
-        <div onClick={() => {setOpen(!open)}}>
-          <div className={`menu-trigger ${open? 'active' : 'inactive'}`}>
-          <img src={MenuButtonHover} alt="Menu Button Hover" className='menu-button-hover'/>
-          </div>
-        </div>
 
         <div className='title-div'>
           <a href="">
