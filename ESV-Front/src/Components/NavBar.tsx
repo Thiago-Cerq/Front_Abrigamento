@@ -1,7 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 import './NavBar.css'
-import MenuBar from './MenuBar/MenuBar'
-import Footer from './Footer/Footer'
 
 // Assets
 import CompleteLogo from '../assets/complete-logo.png'
@@ -17,9 +15,9 @@ function NavBar() {
 
 
         <div className='title-div'>
-          <a href="">
+          <Link to='/'>
             <img src={CompleteLogo} alt="Logo ESVirtual" className='complete-logo'/>
-          </a>
+          </Link>
 
           <div className='division-line-left'></div>
           <h1 className='site-title'>Escritório Social Virtual | Plataforma Web</h1>

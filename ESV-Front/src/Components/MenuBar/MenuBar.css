@@ -38,15 +38,40 @@
     line-height: 16px;
 }
 
+.menu-subitem-name {
+    margin: 0%;
+    margin-left: 35px;
+    font-style: normal;
+    font-size: 14px;
+    line-height: 16px;
+}
+
 .arrow-menu {
-    position: sticky;
-    margin-right: 25px;
-    display: flex;
-    left: 100%;
+    position: relative;
+    padding: 2px;
+    box-shadow: 2px -2px 0 1px;
+    border: solid transparent;
+    left: 50px;
+}
+
+.menu-items.active div.arrow-menu {
+    top: 6px;
+    transform: rotate(-45deg);
+}
+
+.menu-items div.arrow-menu {
+    top: -5px;
+    transform: rotate(135deg);
 }
 
 .separate-line {
     height: 1px;
     width: 250px;
     background-color: rgba(212, 212, 212, 1);
+}
+
+/* CSS Submenu Trigger */
+
+.submenu-trigger.inactive {
+    display: none;
 }
