@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom'
 import './MenuBar.css'
 
 // Assets
-import BlueDownArrow from '../../assets/blue-down-arrow-menu.png'
+
 
 
 function MenuBar() {
@@ -36,7 +36,7 @@ function SimpleMenuItem(props: {title: string, path: string}){
   )
 }
 
-function DropdownMenuItem(props: {title: string, path:string, options: Array<string>}){
+function DropdownMenuItem(props: {title: string, path:string, options: {option: string, path: string}[]}){
 
   const [open, setOpen] = useState(false)
 
@@ -50,17 +50,13 @@ function DropdownMenuItem(props: {title: string, path:string, options: Array<str
     <div className='separate-line'></div>
 
     <div className={`submenu-trigger ${open? 'active' : 'inactive'}`}>
-      <NavLink to='/modulos/tratamento-ao-uso-de-drogas' className='menu-items'>
-          <h4 className='menu-subitem-name'> Tratamento ao uso abusivo de álcool e outras drogas </h4>
-      </NavLink>
-
-      <div className='separate-line'></div>
-
-      <NavLink to='/modulos/assistencia-juridica-gratuita' className='menu-items'>
-          <h4 className='menu-subitem-name'> Assistência jurídica gratuita </h4>
-      </NavLink>
-
-      <div className='separate-line'></div>
+      {props.options.map(options => <div>
+        <NavLink to={options.path} className='menu-items'>
+        <h4 className='menu-subitem-name'>{options.option}</h4>
+        </NavLink>
+        <div className='separate-line'></div>
+        </div>
+      )}
     </div>
 
     </>
@@ -68,9 +64,12 @@ function DropdownMenuItem(props: {title: string, path:string, options: Array<str
 }
 
 const modulesOptions = [
-  'Abrigamento temporário', 'Alimentação',
-  'Direções e endereços úteis', 'Assistência jurídica gratuita',
-  'Tratamento ao uso abusivo de álcool e outras drogas', 'Outros serviços'
+  {option: 'Abrigamento temporário', path: '/modulos/abrigamento-temporario'},
+  {option: 'Alimentação', path: '/modulos/alimentacao'},
+  {option: 'Direções e endereços úteis', path: '/modulos/direcoes-e-enderecos-uteis'},
+  {option: 'Assistência jurídica gratuita', path: '/modulos/assistencia-juridica-gratuita'},
+  {option: 'Tratamento ao uso abusivo de álcool e outras drogas', path: '/modulos/tratamento-ao-uso-de-drogas'},
+  {option: 'Outros serviços', path: '/modulos/outros-servicos'},
 ]
 
 export default MenuBar
