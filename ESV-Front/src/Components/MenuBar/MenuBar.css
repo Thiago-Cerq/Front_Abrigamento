@@ -17,16 +17,20 @@
     align-items: center;
     cursor: pointer;
     background: #FAFAFA;
+    color: #0C8BB0;
+}
+
+.menu-items:hover {
+    background: #0C8BB0;
+    color: white;
 }
 
 .menu-item-name {
     margin: 0%;
     margin-left: 25px;
     font-style: normal;
-    font-weight: 450;
     font-size: 14px;
     line-height: 16px;
-    color: #0C8BB0;
 }
 
 .arrow-menu {
@@ -40,4 +44,8 @@
     height: 1px;
     width: 250px;
     background-color: rgba(212, 212, 212, 1);
+}
+
+.link-menu {
+    text-decoration: none;
 }
