@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 import './MenuBar.css'
 
 // Assets
@@ -13,9 +13,7 @@ function MenuBar() {
     <div className='menu-trigger'>
     <div className='menu-background'>
         <SimpleMenuItem title='Página Inicial' path='/'/>
-        <SimpleMenuItem title='Módulos do ESVirtual' path='modules'/>
-        <DropdownMenuItem title='Módulos do ESVirtual'/>
-        <DropdownMenuItem title='Funcionários do Escritório Social'/>
+        <DropdownMenuItem title='Módulos do ESVirtual' path='modules' options={modulesOptions}/>
      </div>
     </div>
     </>
@@ -26,11 +24,9 @@ function SimpleMenuItem(props: {title: string, path: string}){
   
   return (
     <>
-    <Link to={props.path} className='link-menu'>
-      <div className='menu-items'>
+    <NavLink to={props.path} className='menu-items'>
         <h4 className='menu-item-name'> {props.title} </h4>
-      </div>
-      </Link>
+      </NavLink>
 
       <div className='separate-line'></div>
 
@@ -38,20 +34,25 @@ function SimpleMenuItem(props: {title: string, path: string}){
   )
 }
 
-function DropdownMenuItem(props: {title: string}){
+function DropdownMenuItem(props: {title: string, path:string, options: Array<string>}){
 
   return (
     <>
-    <div>
-    <div className='menu-items'>
+    <NavLink to={props.path} className='menu-items'>
         <h4 className='menu-item-name'> {props.title} </h4>
         <img src={BlueDownArrow} alt="seta azul para baixo" className='arrow-menu'/>
-      </div>
-    </div>
+      </NavLink>
 
-      <div className='separate-line'></div>
+    <div className='separate-line'></div>
+
     </>
   )
 }
+
+const modulesOptions = [
+  'Abrigamento temporário', 'Alimentação',
+  'Direções e endereços úteis', 'Assistência jurídica gratuita',
+  'Tratamento ao uso abusivo de álcool e outras drogas', 'Outros serviços'
+]
 
 export default MenuBar

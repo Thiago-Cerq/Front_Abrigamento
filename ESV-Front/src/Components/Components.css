@@ -39,9 +39,12 @@
 .menu-trigger.active {
     opacity: 1;
     visibility: visible;
+    transition: 200ms;
+
 }
 
 .menu-trigger.inactive {
     opacity: 0;
     visibility: hidden;
+    transition: 200ms;
 }
