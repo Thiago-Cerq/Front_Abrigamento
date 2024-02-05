@@ -1,23 +1,42 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import './MenuBar.css'
+import { modulesOptions } from '../../Pages/modules/modules'
 
 // Assets
+import MenuButtonHover from '../../assets/menu-button-hover.png'
+import MenuCloseHover from '../../assets/menu-close-hover.png'
 
 
 
 function MenuBar() {
+  const [open, setOpen] = useState(false)
 
   return (
     <>
-    <div className='menu-trigger'>
-    <div className='menu-background'>
-        <SimpleMenuItem title='Página Inicial' path='/'/>
-        <DropdownMenuItem title='Módulos do ESVirtual' path='modulos' options={modulesOptions}/>
-        <SimpleMenuItem title='aaaaaaaaaaa' path='/funcionarios'/>
 
-     </div>
-    </div>
+      <div>
+        <div onClick={() => {setOpen(!open)}}>
+          <img src={MenuButtonHover} alt="Menu Button Hover" className={`menu-button-hover ${open? 'active' : 'inactive'}`}/>
+          <img src={MenuCloseHover} alt="Menu Button Hover" className={`menu-close-hover ${open? 'active' : 'inactive'}`}/>
+        </div>
+
+        <div className={`menu-trigger ${open? 'active' : 'inactive'}`}>
+
+            <div className='menu-background'>
+              <div onClick={() => {setOpen(false)}}>
+                <SimpleMenuItem title='Página Inicial' path='/'/>
+              </div>
+              <div>
+                <DropdownMenuItem title='Módulos do ESVirtual' path='modulos' options={modulesOptions}/>
+              </div>
+              <div onClick={() => {setOpen(false)}}>
+                <SimpleMenuItem title='Funcionários do Escritório Social' path='/funcionarios'/>
+              </div>
+          </div>
+        </div>
+      </div>
+
     </>
   )
 }
@@ -39,10 +58,13 @@ function SimpleMenuItem(props: {title: string, path: string}){
 function DropdownMenuItem(props: {title: string, path:string, options: {option: string, path: string}[]}){
 
   const [open, setOpen] = useState(false)
+  
+  const el = document.getElementById('trigger-submenu')
 
   return (
     <>
-    <NavLink to={props.path} className='menu-items' onClick={() => {setOpen(!open)}}>
+    <NavLink to={props.path} className='menu-items' id='trigger-submenu' 
+    onClick={() => el?.className == 'menu-items active'? setOpen(!open) : setOpen(open)}>
         <h4 className='menu-item-name'> {props.title} </h4>
         <div className='arrow-menu'></div>
     </NavLink>
@@ -62,14 +84,5 @@ function DropdownMenuItem(props: {title: string, path:string, options: {option: 
     </>
   )
 }
-
-const modulesOptions = [
-  {option: 'Abrigamento temporário', path: '/modulos/abrigamento-temporario'},
-  {option: 'Alimentação', path: '/modulos/alimentacao'},
-  {option: 'Direções e endereços úteis', path: '/modulos/direcoes-e-enderecos-uteis'},
-  {option: 'Assistência jurídica gratuita', path: '/modulos/assistencia-juridica-gratuita'},
-  {option: 'Tratamento ao uso abusivo de álcool e outras drogas', path: '/modulos/tratamento-ao-uso-de-drogas'},
-  {option: 'Outros serviços', path: '/modulos/outros-servicos'},
-]
 
 export default MenuBar
