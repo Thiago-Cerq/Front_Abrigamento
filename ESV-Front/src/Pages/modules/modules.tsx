@@ -14,10 +14,8 @@ function Modules() {
 
   return (
     <>
-    <div className='modules-root'>
-    <div className='adjust-line'>
-      <div className='line'></div>
-    </div>
+    <div className='container'>
+    <hr />
 
 
     <p className='p-modules'>Selecione o módulo que deseja visualizar e/ou editar informações:</p>

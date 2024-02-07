@@ -1,4 +1,3 @@
-import { useState, useEffect, useRef } from 'react'
 import { Outlet } from 'react-router-dom'
 import './Components.css'
 import NavBar from './NavBar'
@@ -9,8 +8,6 @@ import Footer from './Footer/Footer'
 
 function Components() {
 
-  // Dropdown Menu
-  const [open, setOpen] = useState(false)
 
   return (
     <>
