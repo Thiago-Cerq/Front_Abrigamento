@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import './MenuBar.css'
 import { modulesOptions } from '../../Pages/modules/modules'
@@ -64,7 +64,7 @@ function DropdownMenuItem(props: {title: string, path:string, options: {option: 
   return (
     <>
     <NavLink to={props.path} className='menu-items' id='trigger-submenu' 
-    onClick={() => el?.className == 'menu-items active'? setOpen(!open) : setOpen(open)}>
+    onClick={() => el?.className == 'menu-items active'? setOpen(!open) : setOpen(false)}>
         <h4 className='menu-item-name'> {props.title} </h4>
         <div className='arrow-menu'></div>
     </NavLink>

@@ -1,6 +1,18 @@
+/* CSS Menu Trigger */
+.menu-trigger.active {
+    opacity: 1;
+    transform: translate(0px,0px);
+    transition: transform .2s ease-in-out;
+
+}
+
+.menu-trigger.inactive {
+    transform: translate(-250px,0px);
+    transition: transform .2s ease-in-out;
+}
+
 .menu-background {
     position: absolute;
-    left: 0%;
     width: 250px;
     height: 100vh;
     top: 80px;

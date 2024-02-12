@@ -47,16 +47,16 @@ function ModuleBox(props: {options: {option: string, path: string, img: string}[
 }
 
 export const modulesOptions = [
-  {option: 'Abrigamento temporário', path: '/modulos/abrigamento-temporario',
+  {option: 'Abrigamento temporário', path: '/modulo-abrigamento-temporario',
    img: BannerAbrigamentoTemporario},
-  {option: 'Alimentação', path: '/modulos/alimentacao', img: BannerAlimentacao},
-  {option: 'Direções e endereços úteis', path: '/modulos/direcoes-e-enderecos-uteis',
+  {option: 'Alimentação', path: '/modulo-alimentacao', img: BannerAlimentacao},
+  {option: 'Direções e endereços úteis', path: '/modulo-direcoes-e-enderecos-uteis',
    img: BannerDirecoesEEnderecos},
-  {option: 'Assistência jurídica gratuita', path: '/modulos/assistencia-juridica-gratuita',
+  {option: 'Assistência jurídica gratuita', path: '/modulo-assistencia-juridica-gratuita',
    img: BannerAssistenciaJuridica},
-  {option: 'Tratamento ao uso abusivo de álcool e outras drogas', path: '/modulos/tratamento-ao-uso-de-drogas',
+  {option: 'Tratamento ao uso abusivo de álcool e outras drogas', path: '/modulo-tratamento-ao-uso-de-drogas',
    img: BannerTratamentoDrogas},
-  {option: 'Outros serviços', path: '/modulos/outros-servicos', img: BannerOutrosServicos},
+  {option: 'Outros serviços', path: '/modulo-outros-servicos', img: BannerOutrosServicos},
 ]
 
 

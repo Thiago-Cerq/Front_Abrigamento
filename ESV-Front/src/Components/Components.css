@@ -33,16 +33,3 @@
     opacity: 0;
     visibility: hidden;
 }
-
-/* CSS Menu Trigger */
-
-.menu-trigger.active {
-    opacity: 1;
-
-}
-
-.menu-trigger.inactive {
-    opacity: 0;
-    display: none;
-
-}
