@@ -6,6 +6,7 @@ import React from 'react';
 import eyeImage from '../../assets/Icons/eye.svg';
 import pencilImage from '../../assets/Icons/pencil.svg';
 import trashImage from '../../assets/Icons/trash.svg';
+import { Link } from 'react-router-dom';
 
 
 
@@ -113,7 +114,14 @@ function Abrigamento() {
                   </React.Fragment>
                 ))}
               </>
+
+              <tfoot>
+               
+              </tfoot>
             </table>
+            <div className='btn-div'>
+                  <Link to="/modulo-abrigamento-temporario-cadastro"> <button className='btn-novo'> + INCLUIR NOVO</button> </Link>
+            </div>
           </div>
           
         </div>
