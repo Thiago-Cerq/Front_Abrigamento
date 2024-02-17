@@ -5,6 +5,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
+//import Url from "../../Components/Url/url2";
 
 const schema = yup
   .object({
@@ -90,7 +91,7 @@ function AbrigamentoCadastro() {
             <>
             <div className='container'>
                 <hr />
-
+                    {/*<Url/>*/}
                     <h1 className='titulo-page'>CENTRO DE REFERÊNCIA DE ABRIGAMENTO TEMPORÁRIO</h1>
                     <h2 className='subtitulo-AT'>Os campos marcados com <b className='asterisco'>*</b> são de preenchimento obrigatório</h2>
 
