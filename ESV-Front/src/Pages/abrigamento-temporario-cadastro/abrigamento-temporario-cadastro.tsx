@@ -15,8 +15,8 @@ const schema = yup
     endereco: yup.string().required("O campo é obrigatório!"),
     cep: yup.string().matches(/\d{5}-\d{3}/, "O CEP não está no formato!").required("O campo é obrigatório!"),
     nomeLocal: yup.string().required("O campo é obrigatório!"),
-    telefone: yup.string().matches(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/, "O celular não está no formato padrão (XX) 9XXXX-XXXX"),
-    whatsapp: yup.string().matches(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/, "O celular não está no formato padrão (XX) 9XXXX-XXXX"),
+    telefone: yup.string().matches(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/, "O celular não está no formato padrão!"),
+    whatsapp: yup.string().matches(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/, "O celular não está no formato padrão!"),
     site: yup.string(),
     facebook: yup.string(),
     instagram: yup.string(),
@@ -126,34 +126,10 @@ function AbrigamentoCadastro() {
                             </form>
                         </div>
 
-                        <div className="flex-search-bar-4">
-                            <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
-                            <span>{errors.UF?.message}</span>
-                            <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input
-                                    className={`question-bar ${errors.UF ? 'error-input' : ''}`}
-                                    {...register('UF', { required: true })}
-                                    type="text"
-                                    placeholder="Selecione"
-                                />
-                            </form>
-                        </div>
+                        <SelectEstadoECidade options={estadosECidades}/>
 
                         <div className="flex-search-bar-4">
-                            <h2 className='subtitle-question'>Cidade <b className='asterisco'>*</b></h2>
-                            <span>{errors.cidade?.message}</span>
-                            <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input
-                                    className={`question-bar ${errors.cidade ? 'error-input' : ''}`}
-                                    {...register('cidade', { required: true })}
-                                    type="text"
-                                    placeholder="Selecione"
-                                />
-                            </form>
-                        </div>
-
-                        <div className="flex-search-bar-4">
-                            <h2 className='subtitle-question'>Bairro<b className='asterisco'>*</b></h2>
+                            <h2 className='subtitle-question'>Bairro <b className='asterisco'>*</b></h2>
                             <span>{errors.bairro?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
                                 <input
@@ -328,5 +304,51 @@ function AbrigamentoCadastro() {
         </>
     );
 };
+
+function SelectEstadoECidade(props: {options: {valor: string, estado: string, cidades: {cidade: string[]}}[]}) {
+
+    return (
+    <>
+    <div className="flex-search-bar-4">
+        <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
+        <select className="form-select" aria-label="Select estado">
+                <option selected>Selecione</option>
+        {props.options.map(options =>
+                <option value={options.valor}>{options.estado}</option>
+            )}
+        </select>
+    </div>
+
+    <div className="flex-search-bar-4">
+        <h2 className='subtitle-question'>Cidade <b className='asterisco'>*</b></h2>
+        <select className="form-select" aria-label="Select estado">
+                <option selected>Selecione</option>
+        {props.options.map(options =>
+                <option value={options.valor}>{options.estado}</option>
+            )}
+        </select>
+    </div>
+    </>
+    )
+}
+
+const estadosECidades = [
+    {valor: '1', estado: 'Distrito Federal',
+    cidades: {cidade: ['Água Quente', 'Arapoanga', 'Águas Claras', 'Arniqueira', 'Brazlândia',
+                    'Candangolândia', 'Ceilândia', 'Cruzeiro', 'Fercal', 'Gama',
+                    'Guará', 'Itapoã', 'Jardim Botânico', 'Lago Norte', 'Lago Sul',
+                    'Núcleo Bandeirante', 'Paranoá', 'Park Way', 'Planaltina', 'Plano Piloto',
+                    'Recanto das Emas', 'Riacho Fundo', 'Riacho Fundo II', 'Samambaia', 'Santa Maria',
+                    'São Sebastião', 'SCIA/Estrutural', 'SIA', 'Sobradinho', 'Sobradinho II',
+                    'Sol Nascente e Pôr do Sol', 'Sudoeste/Octogonal', 'Taguatinga', 'Varjão', 'Vicente Pires']}},
+    {valor: '2', estado: 'Goiás',
+    cidades: {cidade: ['Água Quente', 'Arapoanga', 'Águas Claras', 'Arniqueira', 'Brazlândia',
+                    'Candangolândia', 'Ceilândia', 'Cruzeiro', 'Fercal', 'Gama',
+                    'Guará', 'Itapoã', 'Jardim Botânico', 'Lago Norte', 'Lago Sul',
+                    'Núcleo Bandeirante', 'Paranoá', 'Park Way', 'Planaltina', 'Plano Piloto',
+                    'Recanto das Emas', 'Riacho Fundo', 'Riacho Fundo II', 'Samambaia', 'Santa Maria',
+                    'São Sebastião', 'SCIA/Estrutural', 'SIA', 'Sobradinho', 'Sobradinho II',
+                    'Sol Nascente e Pôr do Sol', 'Sudoeste/Octogonal', 'Taguatinga', 'Varjão', 'Vicente Pires']}}
+]
 
 export default AbrigamentoCadastro;
