@@ -67,15 +67,22 @@ function Abrigamento() {
   //}
 
   
-  function addLine(data: any, index: number) {
+  function addLine(iten: any, index: number) {
     const isEven = index % 2 === 0;
     return (
       <tbody className='t-list'>
         <tr className={isEven ? 'even-row' : 'odd-row'}>
-          <td className='teste'>{data.nome}</td>
-          <td className='td-action'><img src={eyeImage}/> <img src={pencilImage}/> <img src={trashImage}/> </td>
+          <td className='teste'>{iten.nome}</td>
+          <td className='td-action'>
+            <img src={eyeImage}/>
+              {/*<Link  className=' link-to' to={{pathname: `/modulo-abrigamento-temporario-edita/${iten.id}`}}> */}
+              <Link  className=' link-to' to={{pathname: `/modulo-abrigamento-temporario-edita/${index}`}}> 
+                <img src={pencilImage}/> 
+              </Link> 
+            <img src={trashImage}/> 
+          </td>
         </tr>
-      </tbody>
+      </tbody> 
     )
   }
 

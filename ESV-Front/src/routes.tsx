@@ -1,11 +1,11 @@
 import { Route, Routes } from "react-router-dom";
-
 import Components from "./Components/Components";
 
 // Modulos
 import Modules from "./Pages/modules/modules";
 import Abrigamento from "./Pages/abrigamento-temporario/abrigamento"; 
 import AbrigamentoCadastro from "./Pages/abrigamento-temporario-cadastro/abrigamento-temporario-cadastro";
+import AbrigamentoEdita from "./Pages/abrigamento-temporario-edita/abrigamento-temporario-edita";
 
 
 function MainRoutes() {
@@ -17,6 +17,8 @@ function MainRoutes() {
 
                 <Route path="modulo-abrigamento-temporario" element={<Abrigamento/>}/>,
                 <Route path="modulo-abrigamento-temporario-cadastro" element={<AbrigamentoCadastro/>}/>,
+
+                <Route path="modulo-abrigamento-temporario-edita/:id" element={<AbrigamentoEdita/>}/>,
 
                 <Route path="modulo-alimentacao" element={<h1>alimentacao</h1>}/>,
                 <Route path="modulo-direcoes-e-enderecos-uteis" element={<h1>direcoes-e-enderecos-uteis</h1>}/>,
@@ -31,3 +33,5 @@ function MainRoutes() {
 }
 
 export default MainRoutes
+
+
