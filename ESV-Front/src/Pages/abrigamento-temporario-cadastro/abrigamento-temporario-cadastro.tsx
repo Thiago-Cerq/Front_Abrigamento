@@ -1,5 +1,6 @@
 import './abrigamento-temporario-cadastro.css'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import{ useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
@@ -51,6 +52,23 @@ const extractCoordinatesFromUrl = (url: string) => {
 
 
 function AbrigamentoCadastro() {
+
+    const [estado, setEstado] = useState<any[]>([]);
+
+    const getEstado = () => {
+        axios.get("../../../esv.stg.cloud.cnj.jus.br.estados.json")
+        .then((response) => {
+            setEstado(response.data.content)
+            console.log("A requisição foi um sucesso!")
+        })
+        .catch(() => {
+            console.log("Deu errado!")
+        })
+    }
+
+    useEffect(() => {
+        getEstado()
+    },[])
 
     let navigate = useNavigate();
     const [googleMapsUrl, setGoogleMapsUrl] = useState("");
@@ -126,7 +144,15 @@ function AbrigamentoCadastro() {
                             </form>
                         </div>
 
-                        <SelectEstadoECidade options={estadosECidades}/>
+                        <div className="flex-search-bar-4">
+                            <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
+                            <select className="form-select" aria-label="Select estado">
+                                <option defaultValue={0}>Selecione</option>
+                                {estado.map((object, id) =>
+                                    <option value={id}>{id}</option>
+                                )}
+                            </select>
+                        </div>
 
                         <div className="flex-search-bar-4">
                             <h2 className='subtitle-question'>Bairro <b className='asterisco'>*</b></h2>
@@ -304,51 +330,5 @@ function AbrigamentoCadastro() {
         </>
     );
 };
-
-function SelectEstadoECidade(props: {options: {valor: string, estado: string, cidades: {cidade: string[]}}[]}) {
-
-    return (
-    <>
-    <div className="flex-search-bar-4">
-        <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
-        <select className="form-select" aria-label="Select estado">
-                <option selected>Selecione</option>
-        {props.options.map(options =>
-                <option value={options.valor}>{options.estado}</option>
-            )}
-        </select>
-    </div>
-
-    <div className="flex-search-bar-4">
-        <h2 className='subtitle-question'>Cidade <b className='asterisco'>*</b></h2>
-        <select className="form-select" aria-label="Select estado">
-                <option selected>Selecione</option>
-        {props.options.map(options =>
-                <option value={options.valor}>{options.estado}</option>
-            )}
-        </select>
-    </div>
-    </>
-    )
-}
-
-const estadosECidades = [
-    {valor: '1', estado: 'Distrito Federal',
-    cidades: {cidade: ['Água Quente', 'Arapoanga', 'Águas Claras', 'Arniqueira', 'Brazlândia',
-                    'Candangolândia', 'Ceilândia', 'Cruzeiro', 'Fercal', 'Gama',
-                    'Guará', 'Itapoã', 'Jardim Botânico', 'Lago Norte', 'Lago Sul',
-                    'Núcleo Bandeirante', 'Paranoá', 'Park Way', 'Planaltina', 'Plano Piloto',
-                    'Recanto das Emas', 'Riacho Fundo', 'Riacho Fundo II', 'Samambaia', 'Santa Maria',
-                    'São Sebastião', 'SCIA/Estrutural', 'SIA', 'Sobradinho', 'Sobradinho II',
-                    'Sol Nascente e Pôr do Sol', 'Sudoeste/Octogonal', 'Taguatinga', 'Varjão', 'Vicente Pires']}},
-    {valor: '2', estado: 'Goiás',
-    cidades: {cidade: ['Água Quente', 'Arapoanga', 'Águas Claras', 'Arniqueira', 'Brazlândia',
-                    'Candangolândia', 'Ceilândia', 'Cruzeiro', 'Fercal', 'Gama',
-                    'Guará', 'Itapoã', 'Jardim Botânico', 'Lago Norte', 'Lago Sul',
-                    'Núcleo Bandeirante', 'Paranoá', 'Park Way', 'Planaltina', 'Plano Piloto',
-                    'Recanto das Emas', 'Riacho Fundo', 'Riacho Fundo II', 'Samambaia', 'Santa Maria',
-                    'São Sebastião', 'SCIA/Estrutural', 'SIA', 'Sobradinho', 'Sobradinho II',
-                    'Sol Nascente e Pôr do Sol', 'Sudoeste/Octogonal', 'Taguatinga', 'Varjão', 'Vicente Pires']}}
-]
 
 export default AbrigamentoCadastro;
