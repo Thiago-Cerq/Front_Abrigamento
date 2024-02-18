@@ -91,7 +91,7 @@ function Abrigamento() {
       <div className='container'>
         <hr/>
         <h1 className='titulo-page'>ABRIGAMENTO TEMPORÁRIO</h1>
-        <h2 className='subtitulo-AT'>Escritório Social do ????????????????????????????</h2>
+        <h2 className='subtitulo-AT'>Escritório Social do(a) ESTADO</h2>
 
         <div className='bloco1'>23423</div> {/*Bloco de imagem*/}
         <hr/>

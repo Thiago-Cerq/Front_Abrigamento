@@ -197,7 +197,7 @@ function AbrigamentoCadastro() {
                     <div className='flex-bar'>
                         
                         <div className="flex-search-bar-c3">
-                            <h2 className='subtitle-question'>(DDD) + Telefone</h2>
+                            <h2 className='subtitle-question'>Telefone</h2>
                             <span>{errors.telefone?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
                                 <input
@@ -210,7 +210,7 @@ function AbrigamentoCadastro() {
                         </div>
 
                         <div className="flex-search-bar-c3">
-                            <h2 className='subtitle-question'>(DDD) + WhatsApp</h2>
+                            <h2 className='subtitle-question'>WhatsApp</h2>
                             <span>{errors.whatsapp?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
                                 <input
@@ -230,7 +230,7 @@ function AbrigamentoCadastro() {
                                     className={`question-bar ${errors.site ? 'error-input' : ''}`}
                                     {...register('site', { required: true })}
                                     type="text"
-                                    placeholder = "www.dominioDoSite.com"
+                                    placeholder = "www.site.com.br"
                                 />
                             </form>
                         </div>

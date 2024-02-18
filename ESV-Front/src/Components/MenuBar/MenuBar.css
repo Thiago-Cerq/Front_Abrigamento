@@ -56,11 +56,17 @@
 
 .menu-subitem-name {
     margin: 0%;
-    margin-left: 35px;
+    margin-left: 50px;
     margin-right: 25px;
     font-style: normal;
     font-size: 14px;
     line-height: 16px;
+}
+
+.arrow-trigger {
+    position: relative;
+    padding: 12px;
+    left: 10px;
 }
 
 .arrow-menu {
@@ -68,15 +74,14 @@
     padding: 2px;
     box-shadow: 2px -2px 0 1px;
     border: solid transparent;
-    left: 25px;
 }
 
-.menu-items.active div.arrow-menu {
+.arrow-menu.active {
     top: 6px;
     transform: rotate(-45deg);
 }
 
-.menu-items div.arrow-menu {
+.arrow-menu.inactive {
     top: -5px;
     transform: rotate(135deg);
 }
