@@ -9,6 +9,12 @@ import { Link } from 'react-router-dom';
 import Select from 'react-select';
 //import Url from "../../Components/Url/url2";
 
+// Máscaras
+import { maskCEP, maskHorario, maskPhone } from '../../Components/Masks/Masks';
+
+// Assets
+import AddButton from '../../assets/add_button.png'
+
 const schema = yup
   .object({
     UF: yup.string().required("O campo é obrigatório!"), 
@@ -63,6 +69,13 @@ const diasDaSemana = [
 
 const multiSelectStyles = {
     control: (styles: object) => ({...styles, backgroundColor: 'white'}),
+    option: (styles: object, state: any) => {
+        return {
+            ...styles,
+            backgroundColor: state.isFocused ? '#0C8BB0' : '#fff',
+            color: state.isFocused ? '#fff' : '#000',
+        }
+    },
     multiValue: (styles: object) => {
         return {
             ...styles,
@@ -95,6 +108,21 @@ const multiSelectStyles = {
     }
 }
 
+const selectStyles = {
+    control: (styles: object) => ({...styles, backgroundColor: 'white'}),
+    option: (styles: object, state: any) => {
+        return {
+            ...styles,
+            backgroundColor: state.isSelected ? '#0C8BB0' : '#fff',  
+            color: state.isSelected ? '#fff' : '#000',
+            ':hover': {
+                color: '#fff',
+                backgroundColor: '#0C8BB0'
+            }
+        }
+    },
+}
+
 
 function AbrigamentoCadastro() {
 
@@ -103,7 +131,7 @@ function AbrigamentoCadastro() {
     const getEstado = () => {
         axios.get("../../../esv.stg.cloud.cnj.jus.br.estados.json")
         .then((response) => {
-            setEstado(response.data.content.nome[0])
+            setEstado(response.data.content)
             console.log("A requisição foi um sucesso!")
         })
         .catch(() => {
@@ -114,6 +142,10 @@ function AbrigamentoCadastro() {
     useEffect(() => {
         getEstado()
     },[])
+
+    const estados = estado.map((valor,id) => (
+         {value: id, label: id} 
+    ))
 
     let navigate = useNavigate();
     const [googleMapsUrl, setGoogleMapsUrl] = useState("");
@@ -147,8 +179,17 @@ function AbrigamentoCadastro() {
         }
     };
 
+    // Add Horario
+    const [phones, setPhones] = useState([''])
+    const addTimeButton = (e: any) => {
+        e.preventDefault()
+        setPhones([...phones, ""])
+    }
 
-    
+    // Máscaras
+    const [cep, setCEP] = useState("")
+    const [horarioInicio, setHorarioInicio] = useState("")
+    const [horarioFim, setHorarioFim] = useState("")
 
     return (
             <>
@@ -180,9 +221,8 @@ function AbrigamentoCadastro() {
                             <h2 className='subtitle-question'>CEP <b className='asterisco'>*</b></h2>
                             <span>{errors.cep?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input
+                                <input value={cep} maxLength={9} onChange={(e) => setCEP(maskCEP(e.target.value))}
                                     className={`question-bar ${errors.cep ? 'error-input' : ''}`}
-                                    {...register('cep', { required: true })}
                                     type="text"
                                     placeholder="00000-000"
                                 />
@@ -191,12 +231,13 @@ function AbrigamentoCadastro() {
 
                         <div className="flex-search-bar-4">
                             <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
-                            <select className="form-select" aria-label="Select estado">
-                                <option defaultValue={0}>Selecione</option>
-                                {estado.map((id) =>
-                                    <option value={id}>{id}</option>
-                                )}
-                            </select>
+                            <Select options={estados} className="multi-select" placeholder="Selecione"
+                            styles={selectStyles}/>
+                        </div>
+
+                        <div className="flex-search-bar-4">
+                            <h2 className='subtitle-question'>Cidade <b className='asterisco'>*</b></h2>
+                            <Select className="multi-select" placeholder="Selecione"/>
                         </div>
 
                         <div className="flex-search-bar-4">
@@ -274,18 +315,20 @@ function AbrigamentoCadastro() {
                             
                             <form>
                             <p className='subtitle-hour'>Início:</p>
-                                <input type="text" placeholder="00:00" className='question-bar-hour'/>
+                                <input value={horarioInicio} maxLength={5} onChange={(e) => setHorarioInicio(maskHorario(e.target.value))}
+                                type="text" placeholder="00:00" className='question-bar-hour'/>
                             </form>
                         </div>
 
                         <div className='flex-bar-hour'>
                             <form>
                             <p className='subtitle-hour'>Fim:</p>
-                                <input type="text" placeholder="00:00" className='question-bar-hour'/>
+                                <input value={horarioFim} maxLength={5} onChange={(e) => setHorarioFim(maskHorario(e.target.value))}
+                                type="text" placeholder="00:00" className='question-bar-hour'/>
                             </form>
                         </div>
-                        
                     </div>
+                    <img src={AddButton} alt="adicionar campo telefone" onClick={addTimeButton}/>
 
                     
 
@@ -293,13 +336,13 @@ function AbrigamentoCadastro() {
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>CONTATOS E REDES</h2>
                     
-                    <div className='flex-bar'>
+                    <div className='flex-bar-multiselect'>
                         
                         <div className="flex-search-bar-c3">
                             <h2 className='subtitle-question'>Telefone</h2>
                             <span>{errors.telefone?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input
+                                <input 
                                     className={`question-bar ${errors.telefone ? 'error-input' : ''}`}
                                     {...register('telefone', { required: true })}
                                     type="text"
@@ -320,7 +363,9 @@ function AbrigamentoCadastro() {
                                 />
                             </form>
                         </div>
+                    </div>
 
+                    <div className='flex-bar'>
                         <div className="flex-search-bar-a3">
                             <h2 className='subtitle-question'>Site</h2>
                             <span>{errors.site?.message}</span>
