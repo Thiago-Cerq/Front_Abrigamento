@@ -36,7 +36,7 @@ function Abrigamento() {
       })
   }
 
-  function interador(data: any) {
+  function iterador(data: any) {
     for (var i = 0; i < data.length; i++) {
   
     }
@@ -47,7 +47,7 @@ function Abrigamento() {
 
   useEffect(() => {
     getInfo();
-    interador(info);
+    iterador(info);
     const totalPaginas = Math.ceil(head.totalElements / limit);
 
     const arrayPages = [];
@@ -67,12 +67,12 @@ function Abrigamento() {
   //}
 
   
-  function addLine(iten: any, index: number) {
+  function addLine(item: any, index: number) {
     const isEven = index % 2 === 0;
     return (
       <tbody className='t-list'>
         <tr className={isEven ? 'even-row' : 'odd-row'}>
-          <td className='teste'>{iten.nome}</td>
+          <td className='teste'>{item.nome}</td>
           <td className='td-action'>
             <img src={eyeImage}/>
               {/*<Link  className=' link-to' to={{pathname: `/modulo-abrigamento-temporario-edita/${iten.id}`}}> */}
@@ -91,7 +91,7 @@ function Abrigamento() {
       <div className='container'>
         <hr/>
         <h1 className='titulo-page'>ABRIGAMENTO TEMPORÁRIO</h1>
-        <h2 className='subtitulo-AT'>Escritório Social do ????????????????????????????</h2>
+        <h2 className='subtitulo-AT'>Escritório Social do(a) ESTADO</h2>
 
         <div className='bloco1'>23423</div> {/*Bloco de imagem*/}
         <hr/>

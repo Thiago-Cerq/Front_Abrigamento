@@ -20,13 +20,23 @@
 }
 
 .question-bar {
-    margin-bottom: 15px;
+    margin-bottom: 30px;
     padding-left: 12px;
     width: 100%;
     height: 50px;
     font-size: 16px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 4px;
+}
+
+.question-bar-hour {
+    margin-bottom: 30px;
+    text-align: center;
+    width: 90px;
+    height: 50px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .flex-bar {
@@ -34,14 +44,48 @@
     justify-content: space-between;
 }
 
+.flex-bar-multiselect {
+    display: flex;
+}
+
 .flex-search-bar-4 {
     width: 23%;
 }
 
-.form-select {
-    height: 50px;
-    border-color: #ccc;
-    border: 1px solid;
+.multi-select {
+    line-height: 36px;
+}
+
+.flex-search-bar-multiselect {
+    min-width: 25%;
+}
+
+.bar-hour {
+    margin-left: 4%;
+}
+
+.flex-bar-hour {
+    position: relative;
+    margin-left: 25px;
+    top: 34px
+}
+
+.subtitle-hour {
+    position: relative;
+    bottom: 7px;
+    margin-right: 10px;
+}
+
+.add-time-button {
+    display: flex;
+    cursor: pointer;
+    color: #0C8BB0;
+    justify-content: end;
+}
+
+.p-time-button {
+    margin-bottom: 0;
+    margin-left: 2px;
 }
 
 .flex-search-bar-3 {
@@ -74,6 +118,7 @@
 }
 
 .flex-search-bar-c1{
+    position: relative;
     width: 50%;
     height: 50px;
     margin-right: 5%;
@@ -93,10 +138,8 @@
 }
 
 .flex-search-bar-a3{
-    width: 35%;
+    width: 48%;
 }
-
-
 
 .btn-div{
     width: 100%;

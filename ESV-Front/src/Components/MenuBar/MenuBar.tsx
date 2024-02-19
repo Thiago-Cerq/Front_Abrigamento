@@ -63,10 +63,11 @@ function DropdownMenuItem(props: {title: string, path:string, options: {option: 
 
   return (
     <>
-    <NavLink to={props.path} className='menu-items' id='trigger-submenu' 
-    onClick={() => el?.className == 'menu-items active'? setOpen(!open) : setOpen(false)}>
+    <NavLink to={props.path} className='menu-items' id='trigger-submenu'>
         <h4 className='menu-item-name'> {props.title} </h4>
-        <div className='arrow-menu'></div>
+        <div className='arrow-trigger' onClick={() => {setOpen(!open)}}>
+          <div className={`arrow-menu ${open? 'active' : 'inactive'}`}></div>
+        </div>
     </NavLink>
 
     <div className='separate-line'></div>

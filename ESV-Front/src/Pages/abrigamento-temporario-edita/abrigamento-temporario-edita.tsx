@@ -6,7 +6,14 @@ import * as yup from "yup"
 import { useNavigate } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import Select from 'react-select';
 //import Url from "../../Components/Url/url2";
+// Máscaras
+import { maskCEP, maskHorario, maskPhone } from '../../Components/Masks/Masks';
+
+// Assets
+import AddButton from '../../assets/add_button.png'
+
 
 const schema = yup
   .object({
@@ -52,14 +59,103 @@ const extractCoordinatesFromUrl = (url: string) => {
   }
 };
 
+const multiSelectStyles = {
+    control: (styles: object) => ({...styles, backgroundColor: 'white'}),
+    option: (styles: object, state: any) => {
+        return {
+            ...styles,
+            backgroundColor: state.isFocused ? '#0C8BB0' : '#fff',
+            color: state.isFocused ? '#fff' : '#000',
+        }
+    },
+    multiValue: (styles: object) => {
+        return {
+            ...styles,
+            alignItems: 'center',
+            fontSize: 18,
+            height: 35,
+            fontWeight: 500,
+            backgroundColor: '#0C8BB0',
+            color: '#fff'
+        }
+    },
+    multiValueLabel: (styles: object) => {
+        return {
+            ...styles,
+            color: '#fff'
+        }
+    },
+    multiValueRemove: (styles: object) => {
+        return {
+            ...styles,
+            height: 35,
+            borderRadius: 0,
+            color: '#fff',
+            cursor: 'pointer',
+            ':hover': {
+                color: '#0C8BB0',
+                backgroundColor: '#D4D4D4'
+            }
+        }
+    }
+}
+
+const selectStyles = {
+    control: (styles: object) => ({...styles, backgroundColor: 'white'}),
+    option: (styles: object, state: any) => {
+        return {
+            ...styles,
+            backgroundColor: state.isSelected ? '#0C8BB0' : '#fff',  
+            color: state.isSelected ? '#fff' : '#000',
+            ':hover': {
+                color: '#fff',
+                backgroundColor: '#0C8BB0'
+            }
+        }
+    },
+}
+
+const diasDaSemana = [
+    { value: 'segunda', label: 'Segunda' },
+    { value: 'terca', label: 'Terça' },
+    { value: 'quarta', label: 'Quarta' },
+    { value: 'quinta', label: 'Quinta' },
+    { value: 'sexta', label: 'Sexta' },
+    { value: 'sabado', label: 'Sábado' },
+    { value: 'domingo', label: 'Domingo' },
+]
+
 
 function AbrigamentoEdita( ) {
-
-
+    let navigate = useNavigate();
+    const [googleMapsUrl, setGoogleMapsUrl] = useState("");
+    const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number; } | null>(null);
+    const [coordinatesError, setCoordinatesError] = useState(false)
     const [info, setInfo] = useState<any[]>([]);
     const [head, setHead] = useState<any[any]>([]);
     const { id } = useParams();
     console.log("ID = ",id);
+
+    const [estado, setEstado] = useState<any[]>([]);
+
+    const getEstado = () => {
+        axios.get("../../../esv.stg.cloud.cnj.jus.br.estados.json")
+        .then((response) => {
+            setEstado(response.data.content)
+            console.log("A requisição foi um sucesso!")
+        })
+        .catch(() => {
+            console.log("Deu errado!")
+        })
+    }
+
+    useEffect(() => {
+        getEstado()
+    },[])
+
+    const estados = estado.map((valor,id) => (
+         {value: id, label: id} 
+    ))
     
     const getInfo = () => {
         //Passando porpagina
@@ -84,11 +180,15 @@ function AbrigamentoEdita( ) {
         getInfo();
     },[]) 
 
+    useEffect(() => {
+        // Certifique-se de que googleMapsUrl não está vazio antes de chamar a função
+        if (googleMapsUrl.trim() !== '') {
+            handleExtractCoordinates();
+        }
+    }, [googleMapsUrl]);
+    
 
-    let navigate = useNavigate();
-    const [googleMapsUrl, setGoogleMapsUrl] = useState("");
-    const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number; } | null>(null);
-    const [coordinatesError, setCoordinatesError] = useState(false);
+
 
     const { register, handleSubmit ,formState: {errors}, reset } = useForm({
         resolver: yupResolver(schema),
@@ -118,7 +218,15 @@ function AbrigamentoEdita( ) {
     };
 
 
-    
+    // Add Horario
+    const [phones, setPhones] = useState([''])
+    const addTimeButton = (e: any) => {
+        e.preventDefault()
+        setPhones([...phones, ""])
+    }
+
+    // Máscaras
+    const [cep, setCEP] = useState("")
 
     return (
             <>
@@ -159,7 +267,16 @@ function AbrigamentoEdita( ) {
                             </form>
                         </div>
 
-                        <SelectEstadoECidade options={estadosECidades}/>
+                        <div className="flex-search-bar-4">
+                            <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
+                            <Select options={estados} className="multi-select" placeholder="Selecione"
+                            styles={selectStyles}/>
+                        </div>
+
+                        <div className="flex-search-bar-4">
+                            <h2 className='subtitle-question'>Cidade <b className='asterisco'>*</b></h2>
+                            <Select className="multi-select" placeholder="Selecione"/>
+                        </div>
 
                         <div className="flex-search-bar-4">
                             <h2 className='subtitle-question'>Bairro <b className='asterisco'>*</b></h2>
@@ -178,14 +295,13 @@ function AbrigamentoEdita( ) {
                     <h2 className='subtitle-question'>Endereço <b className='asterisco'>*</b></h2>
                     <span>{errors.endereco?.message}</span>
                     <div className="search-bar">
-                        <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                            <input
-                                    className={`question-bar ${errors.endereco ? 'error-input' : ''}`}
-                                    {...register('endereco', { required: true })}
-                                    type="text"
-                                    placeholder="Digite"
-                            />
-                        </form>
+                            <form id = "form" onSubmit={handleSubmit(onSubmit)}>
+                                        <input value={cep} maxLength={9} onChange={(e) => setCEP(maskCEP(e.target.value))}
+                                            className={`question-bar ${errors.cep ? 'error-input' : ''}`}
+                                            type="text"
+                                            placeholder="00000-000"
+                                        />
+                            </form>
                     </div>
 
                     <h2 className='subtitle-question'>Geolocalização (link do Google Maps) <b className='asterisco'>*</b></h2>
@@ -196,9 +312,13 @@ function AbrigamentoEdita( ) {
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
                                 <input type="text" value={googleMapsUrl} onChange={handleUrlChange} placeholder="Digite o link do Google Maps" className='question-bar' />
                             </form>
+                            
+                            {/*
                             <div className='btn-div'>
                                 <button className='btn-coordinates' onClick={handleExtractCoordinates}>Extrair Coordenadas</button>
                             </div>
+                            */}
+
                             <div className='flex-bar'>
                                 <form id = "form" onSubmit={handleSubmit(onSubmit)}>
                                     <div className="flex-search-bar-c1">
@@ -223,6 +343,40 @@ function AbrigamentoEdita( ) {
 
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>HORÁRIOS DE FUNCIONAMENTO</h2>
+                    {
+                        phones.map(phone => (
+
+                            <div className='flex-bar-multiselect'>
+                            <div className="flex-search-bar-multiselect">
+                                <h2 className='subtitle-question'>Dia(s) da semana</h2>
+                                <Select isMulti options={diasDaSemana} className='multi-select' placeholder = "Selecione"
+                                styles={multiSelectStyles}/>
+                            </div>
+    
+                            <div className='bar-hour'>
+                                <h2 className='subtitle-question'>Horário</h2>
+                                
+                                <form>
+                                <p className='subtitle-hour'>Início:</p>
+                                    <input type="text" placeholder="00:00" className='question-bar-hour'/>
+                                </form>
+                            </div>
+    
+                            <div className='flex-bar-hour'>
+                                <form>
+                                <p className='subtitle-hour'>Fim:</p>
+                                    <input type="text" placeholder="00:00" className='question-bar-hour'/>
+                                </form>
+                            </div>
+                        </div>
+
+                        ))
+                    }
+
+                    <div className='add-time-button' onClick={addTimeButton}>
+                        <img src={AddButton} alt="adicionar campo telefone"/>
+                        <p className='p-time-button'>Adicionar dia/horário de funcionamento</p>
+                    </div>
 
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>CONTATOS E REDES</h2>
@@ -338,50 +492,7 @@ function AbrigamentoEdita( ) {
     );
 };
 
-function SelectEstadoECidade(props: {options: {valor: string, estado: string, cidades: {cidade: string[]}}[]}) {
 
-    return (
-    <>
-    <div className="flex-search-bar-4">
-        <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
-        <select className="form-select" aria-label="Select estado">
-                <option selected>Selecione</option>
-        {props.options.map(options =>
-                <option value={options.valor}>{options.estado}</option>
-            )}
-        </select>
-    </div>
 
-    <div className="flex-search-bar-4">
-        <h2 className='subtitle-question'>Cidade <b className='asterisco'>*</b></h2>
-        <select className="form-select" aria-label="Select estado">
-                <option selected>Selecione</option>
-        {props.options.map(options =>
-                <option value={options.valor}>{options.estado}</option>
-            )}
-        </select>
-    </div>
-    </>
-    )
-}
-
-const estadosECidades = [
-    {valor: '1', estado: 'Distrito Federal',
-    cidades: {cidade: ['Água Quente', 'Arapoanga', 'Águas Claras', 'Arniqueira', 'Brazlândia',
-                    'Candangolândia', 'Ceilândia', 'Cruzeiro', 'Fercal', 'Gama',
-                    'Guará', 'Itapoã', 'Jardim Botânico', 'Lago Norte', 'Lago Sul',
-                    'Núcleo Bandeirante', 'Paranoá', 'Park Way', 'Planaltina', 'Plano Piloto',
-                    'Recanto das Emas', 'Riacho Fundo', 'Riacho Fundo II', 'Samambaia', 'Santa Maria',
-                    'São Sebastião', 'SCIA/Estrutural', 'SIA', 'Sobradinho', 'Sobradinho II',
-                    'Sol Nascente e Pôr do Sol', 'Sudoeste/Octogonal', 'Taguatinga', 'Varjão', 'Vicente Pires']}},
-    {valor: '2', estado: 'Goiás',
-    cidades: {cidade: ['Água Quente', 'Arapoanga', 'Águas Claras', 'Arniqueira', 'Brazlândia',
-                    'Candangolândia', 'Ceilândia', 'Cruzeiro', 'Fercal', 'Gama',
-                    'Guará', 'Itapoã', 'Jardim Botânico', 'Lago Norte', 'Lago Sul',
-                    'Núcleo Bandeirante', 'Paranoá', 'Park Way', 'Planaltina', 'Plano Piloto',
-                    'Recanto das Emas', 'Riacho Fundo', 'Riacho Fundo II', 'Samambaia', 'Santa Maria',
-                    'São Sebastião', 'SCIA/Estrutural', 'SIA', 'Sobradinho', 'Sobradinho II',
-                    'Sol Nascente e Pôr do Sol', 'Sudoeste/Octogonal', 'Taguatinga', 'Varjão', 'Vicente Pires']}}
-]
 
 export default AbrigamentoEdita;

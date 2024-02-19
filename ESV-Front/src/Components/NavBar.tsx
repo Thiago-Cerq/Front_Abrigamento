@@ -26,7 +26,7 @@ function NavBar() {
 
         <h2 className='data-user'> <b>Nome Sobrenome (Administrador do sistema)</b> <br />
         000.000.000-00 <br />
-        Escritório Social do(a) ??????????????????
+        Escritório Social do(a) ESTADO
         </h2> 
         {/* ver depois a melhor formatação dos dados do usuário */}
 
