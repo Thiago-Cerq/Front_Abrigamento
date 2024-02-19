@@ -1,5 +1,5 @@
 import './abrigamento-temporario-cadastro.css'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import{ useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
@@ -9,8 +9,8 @@ import { Link } from 'react-router-dom';
 
 const schema = yup
   .object({
-    UF: yup.string().required("O campo é obrigatório!"), 
-    cidade: yup.string().required("O campo é obrigatório!"), 
+    //UF: yup.string().required("O campo é obrigatório!"), 
+    //cidade: yup.string().required("O campo é obrigatório!"), 
     bairro: yup.string().required("O campo é obrigatório!"),
     endereco: yup.string().required("O campo é obrigatório!"),
     cep: yup.string().matches(/\d{5}-\d{3}/, "O CEP não está no formato!").required("O campo é obrigatório!"),
@@ -70,7 +70,17 @@ function AbrigamentoCadastro() {
 
     const handleUrlChange = (event: { target: { value: React.SetStateAction<string>; }; }) => {
         setGoogleMapsUrl(event.target.value);
+        console.log("URL: ",event.target.value);
+        console.log("O que é isso?: ",googleMapsUrl);
+        handleExtractCoordinates();
+        handleExtractCoordinates();
     };
+    
+    useEffect(() => {
+         if (googleMapsUrl.trim() !== '') {
+            handleExtractCoordinates();
+        }
+    }, [googleMapsUrl]);
 
     const handleExtractCoordinates = () => {
         const extractedCoordinates = extractCoordinatesFromUrl(googleMapsUrl);
@@ -160,7 +170,7 @@ function AbrigamentoCadastro() {
                             {coordinatesError && (
                                 <p style={{ color: 'red' }}>Coordenadas não encontradas. Verifique se o link do Google Maps está correto.</p>
                             )}
-                            <form id = "form" onSubmit={handleSubmit(onSubmit)}>
+                            <form>
                                 <input type="text" value={googleMapsUrl} onChange={handleUrlChange} placeholder="Digite o link do Google Maps" className='question-bar' />
                             </form>
                             <div className='btn-div'>
