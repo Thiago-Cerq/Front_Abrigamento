@@ -29,9 +29,23 @@
     border-radius: 5px;
 }
 
+.question-bar-hour {
+    margin-bottom: 30px;
+    text-align: center;
+    width: 90px;
+    height: 50px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
 .flex-bar {
     display: flex;
     justify-content: space-between;
+}
+
+.flex-bar-multiselect {
+    display: flex;
 }
 
 .flex-search-bar-4 {
@@ -42,6 +56,33 @@
     height: 50px;
     border-color: #ccc;
     border: 1px solid;
+}
+
+.multi-select {
+    position: relative;
+    justify-self: left;
+    line-height: 36px;
+    font-size: 400;
+}
+
+.flex-search-bar-multiselect {
+    min-width: 25%;
+}
+
+.bar-hour {
+    margin-left: 4%;
+}
+
+.flex-bar-hour {
+    position: relative;
+    margin-left: 25px;
+    top: 34px
+}
+
+.subtitle-hour {
+    position: relative;
+    bottom: 7px;
+    margin-right: 10px;
 }
 
 .flex-search-bar-3 {
@@ -74,6 +115,7 @@
 }
 
 .flex-search-bar-c1{
+    position: relative;
     width: 50%;
     height: 50px;
     margin-right: 5%;

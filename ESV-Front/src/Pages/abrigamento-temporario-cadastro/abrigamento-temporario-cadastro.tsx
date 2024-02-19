@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
+import Select from 'react-select';
 //import Url from "../../Components/Url/url2";
 
 const schema = yup
@@ -50,6 +51,50 @@ const extractCoordinatesFromUrl = (url: string) => {
   }
 };
 
+const diasDaSemana = [
+    { value: 'segunda', label: 'Segunda' },
+    { value: 'terca', label: 'Terça' },
+    { value: 'quarta', label: 'Quarta' },
+    { value: 'quinta', label: 'Quinta' },
+    { value: 'sexta', label: 'Sexta' },
+    { value: 'sabado', label: 'Sábado' },
+    { value: 'domingo', label: 'Domingo' },
+]
+
+const multiSelectStyles = {
+    control: (styles: object) => ({...styles, backgroundColor: 'white'}),
+    multiValue: (styles: object) => {
+        return {
+            ...styles,
+            alignItems: 'center',
+            fontSize: 18,
+            height: 35,
+            fontWeight: 500,
+            backgroundColor: '#0C8BB0',
+            color: '#fff'
+        }
+    },
+    multiValueLabel: (styles: object) => {
+        return {
+            ...styles,
+            color: '#fff'
+        }
+    },
+    multiValueRemove: (styles: object) => {
+        return {
+            ...styles,
+            height: 35,
+            borderRadius: 0,
+            color: '#fff',
+            cursor: 'pointer',
+            ':hover': {
+                color: '#0C8BB0',
+                backgroundColor: '#D4D4D4'
+            }
+        }
+    }
+}
+
 
 function AbrigamentoCadastro() {
 
@@ -58,7 +103,7 @@ function AbrigamentoCadastro() {
     const getEstado = () => {
         axios.get("../../../esv.stg.cloud.cnj.jus.br.estados.json")
         .then((response) => {
-            setEstado(response.data.content)
+            setEstado(response.data.content.nome[0])
             console.log("A requisição foi um sucesso!")
         })
         .catch(() => {
@@ -148,7 +193,7 @@ function AbrigamentoCadastro() {
                             <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
                             <select className="form-select" aria-label="Select estado">
                                 <option defaultValue={0}>Selecione</option>
-                                {estado.map((object, id) =>
+                                {estado.map((id) =>
                                     <option value={id}>{id}</option>
                                 )}
                             </select>
@@ -162,7 +207,7 @@ function AbrigamentoCadastro() {
                                     className={`question-bar ${errors.bairro ? 'error-input' : ''}`}
                                     {...register('bairro', { required: true })}
                                     type="text"
-                                    placeholder="Selecione"
+                                    placeholder="Digite"
                                 />
                             </form>
                         </div>
@@ -216,6 +261,34 @@ function AbrigamentoCadastro() {
 
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>HORÁRIOS DE FUNCIONAMENTO</h2>
+                    
+                    <div className='flex-bar-multiselect'>
+                        <div className="flex-search-bar-multiselect">
+                            <h2 className='subtitle-question'>Dia(s) da semana</h2>
+                            <Select isMulti options={diasDaSemana} className='multi-select' placeholder = "Selecione"
+                            styles={multiSelectStyles}/>
+                        </div>
+
+                        <div className='bar-hour'>
+                            <h2 className='subtitle-question'>Horário</h2>
+                            
+                            <form>
+                            <p className='subtitle-hour'>Início:</p>
+                                <input type="text" placeholder="00:00" className='question-bar-hour'/>
+                            </form>
+                        </div>
+
+                        <div className='flex-bar-hour'>
+                            <form>
+                            <p className='subtitle-hour'>Fim:</p>
+                                <input type="text" placeholder="00:00" className='question-bar-hour'/>
+                            </form>
+                        </div>
+                        
+                    </div>
+
+                    
+
 
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>CONTATOS E REDES</h2>
