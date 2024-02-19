@@ -76,6 +76,18 @@
     margin-right: 10px;
 }
 
+.add-time-button {
+    display: flex;
+    cursor: pointer;
+    color: #0C8BB0;
+    justify-content: end;
+}
+
+.p-time-button {
+    margin-bottom: 0;
+    margin-left: 2px;
+}
+
 .flex-search-bar-3 {
     width: 31%;
 }
@@ -128,8 +140,6 @@
 .flex-search-bar-a3{
     width: 48%;
 }
-
-
 
 .btn-div{
     width: 100%;

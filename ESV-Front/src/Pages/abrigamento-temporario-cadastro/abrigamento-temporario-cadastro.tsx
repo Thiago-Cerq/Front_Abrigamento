@@ -188,8 +188,6 @@ function AbrigamentoCadastro() {
 
     // Máscaras
     const [cep, setCEP] = useState("")
-    const [horarioInicio, setHorarioInicio] = useState("")
-    const [horarioFim, setHorarioFim] = useState("")
 
     return (
             <>
@@ -302,33 +300,40 @@ function AbrigamentoCadastro() {
 
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>HORÁRIOS DE FUNCIONAMENTO</h2>
-                    
-                    <div className='flex-bar-multiselect'>
-                        <div className="flex-search-bar-multiselect">
-                            <h2 className='subtitle-question'>Dia(s) da semana</h2>
-                            <Select isMulti options={diasDaSemana} className='multi-select' placeholder = "Selecione"
-                            styles={multiSelectStyles}/>
+                    {
+                        phones.map(phone => (
+
+                            <div className='flex-bar-multiselect'>
+                            <div className="flex-search-bar-multiselect">
+                                <h2 className='subtitle-question'>Dia(s) da semana</h2>
+                                <Select isMulti options={diasDaSemana} className='multi-select' placeholder = "Selecione"
+                                styles={multiSelectStyles}/>
+                            </div>
+    
+                            <div className='bar-hour'>
+                                <h2 className='subtitle-question'>Horário</h2>
+                                
+                                <form>
+                                <p className='subtitle-hour'>Início:</p>
+                                    <input type="text" placeholder="00:00" className='question-bar-hour'/>
+                                </form>
+                            </div>
+    
+                            <div className='flex-bar-hour'>
+                                <form>
+                                <p className='subtitle-hour'>Fim:</p>
+                                    <input type="text" placeholder="00:00" className='question-bar-hour'/>
+                                </form>
+                            </div>
                         </div>
 
-                        <div className='bar-hour'>
-                            <h2 className='subtitle-question'>Horário</h2>
-                            
-                            <form>
-                            <p className='subtitle-hour'>Início:</p>
-                                <input value={horarioInicio} maxLength={5} onChange={(e) => setHorarioInicio(maskHorario(e.target.value))}
-                                type="text" placeholder="00:00" className='question-bar-hour'/>
-                            </form>
-                        </div>
+                        ))
+                    }
 
-                        <div className='flex-bar-hour'>
-                            <form>
-                            <p className='subtitle-hour'>Fim:</p>
-                                <input value={horarioFim} maxLength={5} onChange={(e) => setHorarioFim(maskHorario(e.target.value))}
-                                type="text" placeholder="00:00" className='question-bar-hour'/>
-                            </form>
-                        </div>
+                    <div className='add-time-button' onClick={addTimeButton}>
+                        <img src={AddButton} alt="adicionar campo telefone"/>
+                        <p className='p-time-button'>Adicionar dia/horário de funcionamento</p>
                     </div>
-                    <img src={AddButton} alt="adicionar campo telefone" onClick={addTimeButton}/>
 
                     
 
