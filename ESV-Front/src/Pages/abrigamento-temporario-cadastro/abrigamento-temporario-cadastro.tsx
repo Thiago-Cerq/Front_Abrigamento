@@ -131,25 +131,31 @@ const selectStyles = {
 
 function AbrigamentoCadastro() {
 
-    const [estado, setEstado] = useState<any[]>([]);
-
-    const getEstado = () => {
-        axios.get("../../../esv.stg.cloud.cnj.jus.br.estados.json")
-        .then((response) => {
-            setEstado(response.data.content)
-            console.log("A requisição foi um sucesso!")
-        })
-        .catch(() => {
-            console.log("Deu errado!")
-        })
-    }
+    const [estado, setEstado] = useState([]);
+    const [selectedEstado, setSelectedEstado] = useState('');
 
     useEffect(() => {
-        getEstado()
-    },[])
+        // Função para buscar os estados da API
+        async function fetchStates() {
+          try {
+            const response = await fetch('http://localhost:8080/localidade/v1/ufs/');
+            const data = await response.json();
+            setEstado(data.content); // Define os estados no estado do componente
+          } catch (error) {
+            console.error('Erro ao buscar estados:', error);
+          }
+        }
 
-    const estados = estado.map((valor,id) => (
-         {value: id, label: id} 
+        fetchStates(); // Chamada da função de busca ao montar o componente
+      }, []);
+    
+      // Manipulador de mudanças no select
+      const handleStateChange = (event) => {
+        setSelectedEstado(event.target.value);
+      };
+
+      const estados = estado.map((state) => (
+        {value: state.sigla, label: state.nome}
     ))
 
     let navigate = useNavigate();
@@ -295,7 +301,7 @@ function AbrigamentoCadastro() {
                         <div className="flex-search-bar-4">
                             <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
                             <Select options={estados} className="multi-select" placeholder="Selecione"
-                            styles={selectStyles}/>
+                            styles={selectStyles} />
                         </div>
 
                         <div className="flex-search-bar-4">
