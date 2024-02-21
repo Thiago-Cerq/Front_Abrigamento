@@ -249,10 +249,22 @@ function AbrigamentoCadastro() {
     };
 
     // Add Horario
-    const [phones, setPhones] = useState([''])
+    const [time, setTime] = useState([''])
     const addTimeButton = (e: any) => {
         e.preventDefault()
+        setTime([...time, ""])
+    }
+
+    // Add Phone
+    const [phones, setPhones] = useState([''])
+    const addPhoneButton = (e: any) => {
+        e.preventDefault()
         setPhones([...phones, ""])
+    }
+
+    const handleChangePhone = (e: any, index: any) => {
+        phones[index] = e.target.value
+        setPhones([...phones])
     }
 
     // Máscaras
@@ -382,7 +394,7 @@ function AbrigamentoCadastro() {
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>HORÁRIOS DE FUNCIONAMENTO</h2>
                     {
-                        phones.map(phone => (
+                        time.map(phone => (
 
                             <div className='flex-bar-multiselect'>
                             <div className="flex-search-bar-multiselect">
