@@ -76,14 +76,13 @@
     margin-right: 10px;
 }
 
-.add-time-button {
+.add-button-div {
     display: flex;
     cursor: pointer;
     color: #0C8BB0;
-    justify-content: end;
 }
 
-.p-time-button {
+.p-add-button {
     margin-bottom: 0;
     margin-left: 2px;
 }

@@ -359,7 +359,7 @@ function AbrigamentoCadastro() {
                                     <input type="text" value={googleMapsUrl} onChange={handleUrlChange} placeholder="Digite o link do Google Maps. Exemplo: https://www.google.com.br/maps/@-15.7811101,-47.7790637,15z?entry=ttu" className='question-bar-loc' />
                                 </div>
                                 <div className='info-button' > {/*onClick={addTimeButton}*/}   
-                                    <p className='p-time-button'> <img src={questionImage} alt="adicionar campo telefone"/>  como posso gerar esse link?</p>
+                                    <p className='p-add-button'> <img src={questionImage} alt="adicionar campo telefone"/>  como posso gerar esse link?</p>
                                 </div>
                             </form>
                             
@@ -423,9 +423,9 @@ function AbrigamentoCadastro() {
                         ))
                     }
 
-                    <div className='add-time-button' onClick={addTimeButton}>
+                    <div className='add-button-div' onClick={addTimeButton}>
                         <img src={AddButton} alt="adicionar campo telefone"/>
-                        <p className='p-time-button'>Adicionar dia/horário de funcionamento</p>
+                        <p className='p-add-button'>Adicionar dia/horário de funcionamento</p>
                     </div>
 
                     
@@ -466,6 +466,12 @@ function AbrigamentoCadastro() {
                         ))
                     }
                     </div>
+
+                    <div className='add-button-div' onClick={addPhoneButton}>
+                        <img src={AddButton} alt="adicionar campo telefone"/>
+                        <p className='p-add-button'>Adicionar telefone e/ou whatsapp</p>
+                    </div>
+                    
 
                     <div className='flex-bar'>
                         <div className="flex-search-bar-a3">
