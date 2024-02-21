@@ -164,17 +164,12 @@ th{
 }
 
 
-.btn-novo{
-  width: 20%;
-  height: 36px;
-  background-color: #0C8BB0 !important;
-  color: #FFFFFF !important;
-  border:#0C8BB0 !important;
-}
+
 
 .btn-div{
+  display: flex;
   width: 100% !important;
-  text-align: right !important;
+  text-align: center !important;
   padding-bottom: 3%;
 }
 
@@ -185,4 +180,66 @@ tfoot{
 
 .link-to{
   width: 25px !important; 
+}
+
+.trashImage{
+  cursor: pointer;
+}
+
+.paginacao{
+  display: flex;
+  width: 100%;
+}
+
+.paginas{
+  text-align: center;
+  align-items: center;
+  display: flex;
+  width: 50%;
+  margin-right: 50px;
+  gap: 10%;
+  
+
+}
+
+.qtdpages{
+  display: flex;
+  width: 100%;
+  justify-content: begin;
+  align-items: center;
+}
+
+.link-to{
+  width: 25px !important; 
+}
+
+.link-pag{ 
+  display: flex;
+  width: 40% !important; 
+}
+
+.btn-novo{
+  width: 100% !important;
+  height: 36px;
+  background-color: #0C8BB0 !important;
+  color: #FFFFFF !important;
+  border:#0C8BB0 !important;
+}
+.div-insere{
+  display: flex;
+  align-items: center; 
+  justify-content: right;
+  width: 50%;
+
+
+}
+
+.circulo {
+  align-items: center;
+  text-align: center;
+  color: #f2f2f2;
+  width: 22px;
+  height: 22px;
+  background-color: #0C8BB0; /* Cor de fundo para visualização */
+  border-radius: 50%; /* Transforma o elemento em um círculo */
 }

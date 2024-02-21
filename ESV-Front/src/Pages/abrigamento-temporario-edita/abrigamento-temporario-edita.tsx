@@ -1,4 +1,4 @@
-import './abrigamento-temporario-edita.css'
+import '../abrigamento-temporario-cadastro/abrigamento-temporario-cadastro.css'
 import React, { useEffect, useState } from 'react';
 import{ useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -7,12 +7,15 @@ import { useNavigate } from 'react-router';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
 import Select from 'react-select';
+import questionImage from '../../assets/Icons/question.svg';
 //import Url from "../../Components/Url/url2";
 // Máscaras
 import { maskCEP, maskHorario, maskPhone } from '../../Components/Masks/Masks';
 
 // Assets
 import AddButton from '../../assets/add_button.png'
+
+
 
 
 const schema = yup
@@ -22,7 +25,7 @@ const schema = yup
     bairro: yup.string().required("O campo é obrigatório!"),
     endereco: yup.string().required("O campo é obrigatório!"),
     cep: yup.string().matches(/\d{5}-\d{3}/, "O CEP não está no formato!").required("O campo é obrigatório!"),
-    nomeLocal: yup.string().required("O campo é obrigatório!"),
+    nome: yup.string().required("O campo é obrigatório!"),
     telefone: yup.string().matches(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/, "O celular não está no formato padrão!"),
     whatsapp: yup.string().matches(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/, "O celular não está no formato padrão!"),
     site: yup.string(),
@@ -126,12 +129,14 @@ const diasDaSemana = [
 ]
 
 
+
+
 function AbrigamentoEdita( ) {
     let navigate = useNavigate();
     const [googleMapsUrl, setGoogleMapsUrl] = useState("");
     const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number; } | null>(null);
     const [coordinatesError, setCoordinatesError] = useState(false)
-    const [info, setInfo] = useState<any[]>([]);
+    //const [info, setInfo] = useState<any[]>([]);
     const [head, setHead] = useState<any[any]>([]);
     const { id } = useParams();
     console.log("ID = ",id);
@@ -160,18 +165,17 @@ function AbrigamentoEdita( ) {
     const getInfo = () => {
         //Passando porpagina
         //axios.get("http://localhost:8080/suas/v1/equipamentos/municipio/2111300/tipo/CRAT?page=${currentPage}&limit={${limit}}")	
-        axios.get("http://localhost:8080/suas/v1/equipamentos/municipio/2111300/tipo/CRAT")	
+        axios
+        .get(`http://localhost:8080/suas/v1/equipamentos/${id}`)		
             .then((response) => {
                 //setInfo(response.data.content[id]);
-                reset(response.data.content[id]);
-                if (id !== undefined) {
-                    console.log(response.data.content[id]);
-                }
+                reset(response.data);
+                console.log(response.data);
                 setHead(response.data.page);
-                console.log("A requisição foi um sucesso!");
-                
+                console.log("A requisição foi um sucesso!");  
             })
-            .catch(() => {
+            .catch((error) => {
+                console.error("Erro na requisição:", error);
                 console.log("Deu errado!");
         });
     }
@@ -196,7 +200,51 @@ function AbrigamentoEdita( ) {
 
     function onSubmit(userData: any) {
         console.log(userData);
+        const dataToSend = {
+            "identificador": null,
+            "nome": userData.nome,
+            "codigoMunicipio": userData.codigoMunicipio,
+            "nomeMunicipio": userData.nomeMunicipio, //???
+            "unidadeFederacao": userData.UF, //???
+            "logradouro": null,
+            "endereco": userData.endereco,
+            "numero": null, //???
+            "complemento": null,
+            "bairro": userData.bairro,
+            "pontoDeReferencia": null,
+            "telefone": userData.telefone,
+            "ramal": userData.ramal,
+            "email": userData.email,
+            "coordenadas": {
+                "type": "Point",
+                "coordinates": [
+                    [
+                        userData.coordinates.latitude,
+                        userData.coordinates.longitude
+                    ]
+                ]
+            },
+            "diasSemana": userData.diasSemana,
+            "horasDia":  userData.diasSemana,
+            "tipoEquipamentoId": "61ae149ea87dca62af24a805", //???
+            "tipoEquipamento":  userData.nome  //"Centro de Referência para Abrigamento Temporário???"
+
+        };
+        console.log(dataToSend);
         navigate('/modulo-abrigamento-temporario')
+        //putInfo(dataToSend)
+        
+    }
+
+    const putInfo = (dataToSend: any) => {
+        axios.put(`http://localhost:8080/suas/v1/equipamentos/${id}`, dataToSend)
+        .then((response) => {
+            setEstado(response.data.content)
+            console.log("A requisição foi um sucesso!")
+        })
+        .catch(() => {
+            console.log("Deu errado!")
+        })
     }
 
     console.log(errors); 
@@ -238,12 +286,12 @@ function AbrigamentoEdita( ) {
 
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>Nome do Local <b className='asterisco'>*</b></h2>
-                    <span>{errors.nomeLocal?.message}</span>
+                    <span>{errors.nome?.message}</span>
                     <div className="search-bar">
                         <form id = "form" onSubmit={handleSubmit(onSubmit)}>
                             <input
-                                className={`question-bar ${errors.nomeLocal ? 'error-input' : ''}`}
-                                {...register('nomeLocal', { required: true })}
+                                className={`question-bar ${errors.nome ? 'error-input' : ''}`}
+                                {...register('nome', { required: true })}
                                 type="text"
                                 placeholder="Digite"
                             />
@@ -258,9 +306,8 @@ function AbrigamentoEdita( ) {
                             <h2 className='subtitle-question'>CEP <b className='asterisco'>*</b></h2>
                             <span>{errors.cep?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input
+                                <input value={cep} maxLength={9} onChange={(e) => setCEP(maskCEP(e.target.value))}
                                     className={`question-bar ${errors.cep ? 'error-input' : ''}`}
-                                    {...register('cep', { required: true })}
                                     type="text"
                                     placeholder="00000-000"
                                 />
@@ -283,7 +330,7 @@ function AbrigamentoEdita( ) {
                             <span>{errors.bairro?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
                                 <input
-                                    className={`question-bar ${errors.bairro ? 'error-input' : ''}`}
+                                    className={`question-bar ${errors.bairro? 'error-input' : ''}`}
                                     {...register('bairro', { required: true })}
                                     type="text"
                                     placeholder="Selecione"
@@ -295,13 +342,14 @@ function AbrigamentoEdita( ) {
                     <h2 className='subtitle-question'>Endereço <b className='asterisco'>*</b></h2>
                     <span>{errors.endereco?.message}</span>
                     <div className="search-bar">
-                            <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                        <input value={cep} maxLength={9} onChange={(e) => setCEP(maskCEP(e.target.value))}
-                                            className={`question-bar ${errors.cep ? 'error-input' : ''}`}
-                                            type="text"
-                                            placeholder="00000-000"
-                                        />
-                            </form>
+                        <form id = "form" onSubmit={handleSubmit(onSubmit)}>
+                            <input
+                                className={`question-bar ${errors.endereco ? 'error-input' : ''}`}
+                                {...register('endereco', { required: true })}
+                                type="text"
+                                placeholder="Digite"
+                            />
+                        </form>
                     </div>
 
                     <h2 className='subtitle-question'>Geolocalização (link do Google Maps) <b className='asterisco'>*</b></h2>
@@ -309,8 +357,13 @@ function AbrigamentoEdita( ) {
                             {coordinatesError && (
                                 <p style={{ color: 'red' }}>Coordenadas não encontradas. Verifique se o link do Google Maps está correto.</p>
                             )}
-                            <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input type="text" value={googleMapsUrl} onChange={handleUrlChange} placeholder="Digite o link do Google Maps" className='question-bar' />
+                            <form>
+                                <div className='search-bar'>
+                                    <input type="text" value={googleMapsUrl} onChange={handleUrlChange} placeholder="Digite o link do Google Maps. Exemplo: https://www.google.com.br/maps/@-15.7811101,-47.7790637,15z?entry=ttu" className='question-bar-loc' />
+                                </div>
+                                <div className='info-button' > {/*onClick={addTimeButton}*/}   
+                                    <p className='p-time-button'> <img src={questionImage} alt="adicionar campo telefone"/>  como posso gerar esse link?</p>
+                                </div>
                             </form>
                             
                             {/*
@@ -328,6 +381,9 @@ function AbrigamentoEdita( ) {
                                     <div className="flex-search-bar-c2">
                                         <h2 className='subtitle-question'>Longitude <b className='asterisco'>*</b></h2>
                                         <input type="text" value={coordinates?.longitude ?? ''} placeholder={``} className='question-bar-c' disabled/>
+                                    </div>
+                                    <div className="flex-search-bar-c2">
+                                        <input type="hidden" name="coordinates" value={JSON.stringify(coordinates)}/>
                                     </div>
                                 </form>
                             </div> 
@@ -381,13 +437,13 @@ function AbrigamentoEdita( ) {
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>CONTATOS E REDES</h2>
                     
-                    <div className='flex-bar'>
+                    <div className='flex-bar-multiselect'>
                         
                         <div className="flex-search-bar-c3">
-                            <h2 className='subtitle-question'>(DDD) + Telefone</h2>
+                            <h2 className='subtitle-question'>Telefone</h2>
                             <span>{errors.telefone?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input
+                                <input 
                                     className={`question-bar ${errors.telefone ? 'error-input' : ''}`}
                                     {...register('telefone', { required: true })}
                                     type="text"
@@ -397,7 +453,7 @@ function AbrigamentoEdita( ) {
                         </div>
 
                         <div className="flex-search-bar-c3">
-                            <h2 className='subtitle-question'>(DDD) + WhatsApp</h2>
+                            <h2 className='subtitle-question'>WhatsApp</h2>
                             <span>{errors.whatsapp?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
                                 <input
@@ -408,7 +464,9 @@ function AbrigamentoEdita( ) {
                                 />
                             </form>
                         </div>
+                    </div>
 
+                    <div className='flex-bar'>
                         <div className="flex-search-bar-a3">
                             <h2 className='subtitle-question'>Site</h2>
                             <span>{errors.site?.message}</span>
@@ -417,7 +475,7 @@ function AbrigamentoEdita( ) {
                                     className={`question-bar ${errors.site ? 'error-input' : ''}`}
                                     {...register('site', { required: true })}
                                     type="text"
-                                    placeholder = "www.dominioDoSite.com"
+                                    placeholder = "www.site.com.br"
                                 />
                             </form>
                         </div>
@@ -490,7 +548,9 @@ function AbrigamentoEdita( ) {
             </div>
         </>
     );
+    
 };
+
 
 
 

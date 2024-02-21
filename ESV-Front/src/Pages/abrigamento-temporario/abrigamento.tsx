@@ -3,10 +3,15 @@ import axios from 'axios';
 
 import {useState, useEffect, useRef} from 'react';
 import React from 'react';
+import { Link } from 'react-router-dom';
+
+// Imagens(SGV)
 import eyeImage from '../../assets/Icons/eye.svg';
 import pencilImage from '../../assets/Icons/pencil.svg';
 import trashImage from '../../assets/Icons/trash.svg';
-import { Link } from 'react-router-dom';
+import previewImage from '../../assets/Icons/preview.svg';
+import nextImage from '../../assets/Icons/next.svg';
+import plusImage from '../../assets/Icons/plus.svg';
 
 
 
@@ -48,14 +53,16 @@ function Abrigamento() {
   useEffect(() => {
     getInfo();
     iterador(info);
-    const totalPaginas = Math.ceil(head.totalElements / limit);
+    const totalPaginas = head.totalPages  + 1;
+    console.log("Aqui ha o total de paginas",head.totalPages)
 
     const arrayPages = [];
-    for(let i = 0; i < totalPaginas; i++){
+    for(let i = 1; i < totalPaginas; i++){
       arrayPages.push(i);
     }
 
     setPages(arrayPages);
+    console.log('Páginas:', arrayPages);
 
   },[]) 
 
@@ -65,7 +72,20 @@ function Abrigamento() {
   //function onSubmit(userData: any) {
   //    console.log(userData);
   //}
-
+  
+  const deletInfo = (itemId: any) => {
+     
+    console.log(`Imagem clicada! ID: ${itemId}`);
+    /*
+    axios.delete(`http://localhost:8080/suas/v1/equipamentos/${itemId}`)
+    .then(response => {
+      console.log('Resposta:', response.data);
+    })
+    .catch(error => {
+      console.error('Erro:', error);
+    });
+   */
+  };
   
   function addLine(item: any, index: number) {
     const isEven = index % 2 === 0;
@@ -75,11 +95,11 @@ function Abrigamento() {
           <td className='teste'>{item.nome}</td>
           <td className='td-action'>
             <img src={eyeImage}/>
-              {/*<Link  className=' link-to' to={{pathname: `/modulo-abrigamento-temporario-edita/${iten.id}`}}> */}
-              <Link  className=' link-to' to={{pathname: `/modulo-abrigamento-temporario-edita/${index}`}}> 
+              <Link  className=' link-to' to={{pathname: `/modulo-abrigamento-temporario-edita/${item.id}`}}> 
+              {/* <Link  className=' link-to' to={{pathname: `/modulo-abrigamento-temporario-edita/${index}`}}> */}
                 <img src={pencilImage}/> 
               </Link> 
-            <img src={trashImage}/> 
+            <img className="trashImage"src={trashImage} onClick={() => deletInfo(item.id)}/> 
           </td>
         </tr>
       </tbody> 
@@ -127,7 +147,23 @@ function Abrigamento() {
               </tfoot>
             </table>
             <div className='btn-div'>
-                  <Link to="/modulo-abrigamento-temporario-cadastro"> <button className='btn-novo'> + INCLUIR NOVO</button> </Link>
+              <div className='paginacao'>
+                <div className='paginas'>
+                  <img src={previewImage}/> 
+                  {pages.map((page, index) => (
+                    <div className="circulo"key={index}
+                      onClick = {()=>setCurrentPage(page)}>{page}
+                    </div>
+                  ))}
+                  <img src={nextImage}/> 
+                </div>     
+                  <div className='div-insere'>
+                    <Link className="link-pag "to="/modulo-abrigamento-temporario-cadastro"> <button className='btn-novo'> 
+                      <img src={plusImage}/> INSERIR NOVO</button> 
+                    </Link>
+                  </div>
+              </div>
+                  
             </div>
           </div>
           

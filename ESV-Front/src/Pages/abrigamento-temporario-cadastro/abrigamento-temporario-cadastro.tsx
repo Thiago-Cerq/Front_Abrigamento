@@ -6,14 +6,17 @@ import * as yup from "yup"
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 import Select from 'react-select';
+
 //import Url from "../../Components/Url/url2";
 
 // Máscaras
 import { maskCEP, maskHorario, maskPhone } from '../../Components/Masks/Masks';
 
 // Assets
+import questionImage from '../../assets/Icons/question.svg';
 import AddButton from '../../assets/add_button.png'
 import axios from 'axios';
+
 
 const schema = yup
   .object({
@@ -22,7 +25,7 @@ const schema = yup
     bairro: yup.string().required("O campo é obrigatório!"),
     endereco: yup.string().required("O campo é obrigatório!"),
     cep: yup.string().matches(/\d{5}-\d{3}/, "O CEP não está no formato!").required("O campo é obrigatório!"),
-    nomeLocal: yup.string().required("O campo é obrigatório!"),
+    nome: yup.string().required("O campo é obrigatório!"),
     telefone: yup.string().matches(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/, "O celular não está no formato padrão!"),
     whatsapp: yup.string().matches(/^\([1-9]{2}\) (?:[2-8]|9[0-9])[0-9]{3}\-[0-9]{4}$/, "O celular não está no formato padrão!"),
     site: yup.string(),
@@ -66,6 +69,8 @@ const diasDaSemana = [
     { value: 'sabado', label: 'Sábado' },
     { value: 'domingo', label: 'Domingo' },
 ]
+
+
 
 const multiSelectStyles = {
     control: (styles: object) => ({...styles, backgroundColor: 'white'}),
@@ -149,7 +154,9 @@ function AbrigamentoCadastro() {
 
     let navigate = useNavigate();
     const [googleMapsUrl, setGoogleMapsUrl] = useState("");
+
     const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number; } | null>(null);
+    
     const [coordinatesError, setCoordinatesError] = useState(false);
 
     const { register, handleSubmit ,formState: {errors} } = useForm({
@@ -158,8 +165,54 @@ function AbrigamentoCadastro() {
 
     function onSubmit(userData: any) {
         console.log(userData);
+        const dataToSend = {
+            "identificador": null,
+            "nome": userData.nome,
+            "codigoMunicipio": userData.codigoMunicipio,
+            "nomeMunicipio": userData.nomeMunicipio, //???
+            "unidadeFederacao": userData.UF, //???
+            "logradouro": null,
+            "endereco": userData.endereco,
+            "numero": null, //???
+            "complemento": null,
+            "bairro": userData.bairro,
+            "pontoDeReferencia": null,
+            "telefone": userData.telefone,
+            "ramal": userData.ramal,
+            "email": userData.email,
+            "coordenadas": {
+                "type": "Point",
+                "coordinates": [
+                    [
+                        userData.coordinates.latitude,
+                        userData.coordinates.longitude
+                    ]
+                ]
+            },
+            "diasSemana": userData.diasSemana,
+            "horasDia":  userData.diasSemana,
+            "tipoEquipamentoId": "61ae149ea87dca62af24a805", //???
+            "tipoEquipamento":  userData.nome  //"Centro de Referência para Abrigamento Temporário???"
+
+        };
+        console.log(dataToSend);
         navigate('/modulo-abrigamento-temporario')
+        //postInfo(dataToSend)
+        
     }
+
+    const postInfo = (dataToSend: any) => {
+        axios.post("http://localhost:8080/suas/v1/equipamentos/", dataToSend)
+        .then((response) => {
+            setEstado(response.data.content)
+            console.log("A requisição foi um sucesso!")
+        })
+        .catch(() => {
+            console.log("Deu errado!")
+        })
+    }
+
+    
 
     console.log(errors); 
 
@@ -209,12 +262,12 @@ function AbrigamentoCadastro() {
 
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>Nome do Local <b className='asterisco'>*</b></h2>
-                    <span>{errors.nomeLocal?.message}</span>
+                    <span>{errors.nome?.message}</span>
                     <div className="search-bar">
                         <form id = "form" onSubmit={handleSubmit(onSubmit)}>
                             <input
-                                className={`question-bar ${errors.nomeLocal ? 'error-input' : ''}`}
-                                {...register('nomeLocal', { required: true })}
+                                className={`question-bar ${errors.nome ? 'error-input' : ''}`}
+                                {...register('nome', { required: true })}
                                 type="text"
                                 placeholder="Digite"
                             />
@@ -229,8 +282,10 @@ function AbrigamentoCadastro() {
                             <h2 className='subtitle-question'>CEP <b className='asterisco'>*</b></h2>
                             <span>{errors.cep?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input value={cep} maxLength={9} onChange={(e) => setCEP(maskCEP(e.target.value))}
+                            {/*maxLength={9} onChange={(e) => setCEP(maskCEP(e.target.value))}*/}
+                                <input value={cep} 
                                     className={`question-bar ${errors.cep ? 'error-input' : ''}`}
+                                    {...register('cep', { required: true })}
                                     type="text"
                                     placeholder="00000-000"
                                 />
@@ -275,13 +330,19 @@ function AbrigamentoCadastro() {
                         </form>
                     </div>
 
-                    <h2 className='subtitle-question'>Geolocalização (link do Google Maps) <b className='asterisco'>*</b></h2>
+                    
                         <div className="search-bar">
+                        <h2 className='subtitle-question'>Geolocalização (link do Google Maps) <b className='asterisco'>*</b></h2>
                             {coordinatesError && (
                                 <p style={{ color: 'red' }}>Coordenadas não encontradas. Verifique se o link do Google Maps está correto.</p>
                             )}
                             <form>
-                                <input type="text" value={googleMapsUrl} onChange={handleUrlChange} placeholder="Digite o link do Google Maps" className='question-bar' />
+                                <div className='search-bar'>
+                                    <input type="text" value={googleMapsUrl} onChange={handleUrlChange} placeholder="Digite o link do Google Maps. Exemplo: https://www.google.com.br/maps/@-15.7811101,-47.7790637,15z?entry=ttu" className='question-bar-loc' />
+                                </div>
+                                <div className='info-button' > {/*onClick={addTimeButton}*/}   
+                                    <p className='p-time-button'> <img src={questionImage} alt="adicionar campo telefone"/>  como posso gerar esse link?</p>
+                                </div>
                             </form>
                             
                             {/*
