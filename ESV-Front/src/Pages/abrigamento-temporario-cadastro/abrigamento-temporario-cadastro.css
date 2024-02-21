@@ -78,9 +78,9 @@
 
 .add-time-button {
     display: flex;
+    margin-bottom: 10px;
     cursor: pointer;
     color: #0C8BB0;
-    justify-content: end;
 }
 
 .p-time-button {
@@ -134,7 +134,15 @@
 }
 
 .flex-search-bar-c3{
-    width: 11%;
+    width: 150px;
+    margin-right: 50px;
+    margin-bottom: 20px;
+}
+
+.flex-bar-phones {
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
 }
 
 .flex-search-bar-a3{

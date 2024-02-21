@@ -1,6 +1,6 @@
 import './abrigamento-temporario-cadastro.css'
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
 import{ useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
@@ -126,25 +126,31 @@ const selectStyles = {
 
 function AbrigamentoCadastro() {
 
-    const [estado, setEstado] = useState<any[]>([]);
-
-    const getEstado = () => {
-        axios.get("../../../esv.stg.cloud.cnj.jus.br.estados.json")
-        .then((response) => {
-            setEstado(response.data.content)
-            console.log("A requisição foi um sucesso!")
-        })
-        .catch(() => {
-            console.log("Deu errado!")
-        })
-    }
+    const [estado, setEstado] = useState([]);
+    const [selectedEstado, setSelectedEstado] = useState('');
 
     useEffect(() => {
-        getEstado()
-    },[])
+        // Função para buscar os estados da API
+        async function fetchStates() {
+          try {
+            const response = await fetch('http://localhost:8080/localidade/v1/ufs/');
+            const data = await response.json();
+            setEstado(data.content); // Define os estados no estado do componente
+          } catch (error) {
+            console.error('Erro ao buscar estados:', error);
+          }
+        }
 
-    const estados = estado.map((valor,id) => (
-         {value: id, label: id} 
+        fetchStates(); // Chamada da função de busca ao montar o componente
+      }, []);
+    
+      // Manipulador de mudanças no select
+      const handleStateChange = (event) => {
+        setSelectedEstado(event.target.value);
+      };
+
+      const estados = estado.map((state) => (
+        {value: state.sigla, label: state.nome}
     ))
 
     let navigate = useNavigate();
@@ -179,11 +185,22 @@ function AbrigamentoCadastro() {
         }
     };
 
-    // Add Horario
-    const [phones, setPhones] = useState([''])
+    // Add Horario e Telefone
+    const [days, setDays] = useState([''])
     const addTimeButton = (e: any) => {
         e.preventDefault()
+        setDays([...days, ""])
+    }
+
+    const [phones, setPhones] = useState([''])
+    const addPhoneButton = (e: any) => {
+        e.preventDefault()
         setPhones([...phones, ""])
+    }
+
+    const handleChangePhone = (e: any, index: any) => {
+        phones[index] = e.target.value
+        setPhones([...phones])
     }
 
     // Máscaras
@@ -230,7 +247,7 @@ function AbrigamentoCadastro() {
                         <div className="flex-search-bar-4">
                             <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
                             <Select options={estados} className="multi-select" placeholder="Selecione"
-                            styles={selectStyles}/>
+                            styles={selectStyles} />
                         </div>
 
                         <div className="flex-search-bar-4">
@@ -301,7 +318,7 @@ function AbrigamentoCadastro() {
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>HORÁRIOS DE FUNCIONAMENTO</h2>
                     {
-                        phones.map(phone => (
+                        days.map((days, index) => (
 
                             <div className='flex-bar-multiselect'>
                             <div className="flex-search-bar-multiselect">
@@ -341,33 +358,43 @@ function AbrigamentoCadastro() {
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>CONTATOS E REDES</h2>
                     
-                    <div className='flex-bar-multiselect'>
-                        
-                        <div className="flex-search-bar-c3">
-                            <h2 className='subtitle-question'>Telefone</h2>
-                            <span>{errors.telefone?.message}</span>
-                            <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input 
-                                    className={`question-bar ${errors.telefone ? 'error-input' : ''}`}
-                                    {...register('telefone', { required: true })}
-                                    type="text"
-                                    placeholder="(00) 9 0000-0000"
-                                />
-                            </form>
-                        </div>
+                    <div className='flex-bar-phones'>
+                    {
+                        phones.map((phones,index) => (
+                            <div className='flex-bar-phones'>
+                                <div className="flex-search-bar-c3">
+                                    <h2 className='subtitle-question'>{`Telefone ${index+1}`}</h2>
+                                    <span>{errors.telefone?.message}</span>
+                                    <form id = "form" onSubmit={handleSubmit(onSubmit)}>
+                                        <input 
+                                            className={'question-bar'}
+                                            type="text"
+                                            placeholder="(00) 9 0000-0000"
+                                        />
+                                    </form>
+                                </div>
 
-                        <div className="flex-search-bar-c3">
-                            <h2 className='subtitle-question'>WhatsApp</h2>
-                            <span>{errors.whatsapp?.message}</span>
-                            <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input
-                                    className={`question-bar ${errors.whatsapp ? 'error-input' : ''}`}
-                                    {...register('whatsapp', { required: true })}
-                                    type="text"
-                                    placeholder="(00) 9 0000-0000"
-                                />
-                            </form>
-                        </div>
+                                <div className="flex-search-bar-c3">
+                                    <h2 className='subtitle-question'>{`Whatsapp ${index+1}`}</h2>
+                                    <span>{errors.whatsapp?.message}</span>
+                                    <form id = "form" onSubmit={handleSubmit(onSubmit)}>
+                                        <input
+                                            className={'question-bar'}
+                                            type="text"
+                                            placeholder="(00) 9 0000-0000"
+                                            onChange={(e) => handleChangePhone(e, index)}
+                                        />
+                                    </form>
+                                </div>
+                            </div>
+                        ))
+                    }
+                        
+                    </div>
+
+                    <div className='add-time-button' onClick={addPhoneButton}>
+                        <img src={AddButton} alt="adicionar campo telefone"/>
+                        <p className='p-time-button'>Adicionar telefone e/ou whatsapp</p>
                     </div>
 
                     <div className='flex-bar'>
