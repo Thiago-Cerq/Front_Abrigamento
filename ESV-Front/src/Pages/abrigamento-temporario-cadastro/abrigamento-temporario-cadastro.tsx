@@ -422,33 +422,37 @@ function AbrigamentoCadastro() {
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>CONTATOS E REDES</h2>
                     
-                    <div className='flex-bar-multiselect'>
-                        
-                        <div className="flex-search-bar-c3">
-                            <h2 className='subtitle-question'>Telefone</h2>
-                            <span>{errors.telefone?.message}</span>
-                            <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input 
-                                    className={`question-bar ${errors.telefone ? 'error-input' : ''}`}
-                                    {...register('telefone', { required: true })}
-                                    type="text"
-                                    placeholder="(00) 9 0000-0000"
-                                />
-                            </form>
-                        </div>
+                    <div className='flex-bar-phones'>
+                    {
+                        phones.map((phones,index) => (
+                            <div className='flex-bar-phones'>
+                                <div className="flex-search-bar-c3">
+                                    <h2 className='subtitle-question'>{`Telefone ${index+1}`}</h2>
+                                    <span>{errors.telefone?.message}</span>
+                                    <form id = "form" onSubmit={handleSubmit(onSubmit)}>
+                                        <input 
+                                            className={'question-bar'}
+                                            type="text"
+                                            placeholder="(00) 9 0000-0000"
+                                        />
+                                    </form>
+                                </div>
 
-                        <div className="flex-search-bar-c3">
-                            <h2 className='subtitle-question'>WhatsApp</h2>
-                            <span>{errors.whatsapp?.message}</span>
-                            <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                                <input
-                                    className={`question-bar ${errors.whatsapp ? 'error-input' : ''}`}
-                                    {...register('whatsapp', { required: true })}
-                                    type="text"
-                                    placeholder="(00) 9 0000-0000"
-                                />
-                            </form>
-                        </div>
+                                <div className="flex-search-bar-c3">
+                                    <h2 className='subtitle-question'>{`Whatsapp ${index+1}`}</h2>
+                                    <span>{errors.whatsapp?.message}</span>
+                                    <form id = "form" onSubmit={handleSubmit(onSubmit)}>
+                                        <input
+                                            className={'question-bar'}
+                                            type="text"
+                                            placeholder="(00) 9 0000-0000"
+                                            onChange={(e) => handleChangePhone(e, index)}
+                                        />
+                                    </form>
+                                </div>
+                            </div>
+                        ))
+                    }
                     </div>
 
                     <div className='flex-bar'>
