@@ -155,7 +155,7 @@ function AbrigamentoCadastro() {
     //     setSelectedEstado(event.target.value);
     //   };
 
-      const handleEstadoChange = (e) => {
+      const handleEstadoChange = (e: any) => {
         setSelectedEstado(e.value);
       };
 
@@ -166,24 +166,22 @@ function AbrigamentoCadastro() {
     // Funções setCidade
     const [cidade, setCidade] = useState([]);
     const [selectedCidade, setSelectedCidade] = useState('');
+    const [loadingCidades, setLoadingCidades] = useState(false)
       useEffect(() => {
         // Função para buscar as cidades da API
-        async function fetchCities() {
-          try {
-            const response = await fetch('http://localhost:8080/localidade/v1/municipios/uf/DF');
-            const data = await response.json();
-            setCidade(data);
-          } catch (error) {
-            console.error('Erro ao buscar cidades:', error);
-          }
-        }
+        if (!selectedEstado) return;
 
-        fetchCities(); // Chamada da função de busca ao montar o componente
-      }, []);
+        setLoadingCidades(true)
+        fetch(`http://localhost:8080/localidade/v1/municipios/uf/${selectedEstado}`)
+            .then((response) => response.json())
+            .then((data) => setCidade(data))
+            .then(() => setLoadingCidades(false))
+
+        }, [selectedEstado]);
 
       // Manipulador de mudanças no select
-      const handleCidadeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedCidade(event.target.value);
+      const handleCidadeChange = (e: any) => {
+        setSelectedCidade(e.value);
       };
 
       const cidades = cidade.map((cidade) => (
@@ -342,17 +340,23 @@ function AbrigamentoCadastro() {
                         <div className="flex-search-bar-4">
                             <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
                             <Select options={estados} className="multi-select" placeholder="Selecione"
-                            styles={selectStyles} onChange={handleEstadoChange} value={estados.find(function (option) {
+                            styles={selectStyles} onChange={handleEstadoChange} 
+                            value={estados.find(function (option) {
                                     return option.value === selectedEstado;
-                           })
-                            }/>
-                            <p>Você selecionou o estado com ID {selectedEstado.toLowerCase()}</p>
+                           })}
+                           />
+                            <p>Você selecionou o estado com sigla {selectedEstado}</p>
                         </div>
 
                         <div className="flex-search-bar-4">
                             <h2 className='subtitle-question'>Cidade <b className='asterisco'>*</b></h2>
                             <Select options={cidades} className="multi-select" placeholder="Selecione"
-                            styles={selectStyles} />
+                            styles={selectStyles} onChange={handleCidadeChange}
+                            value={cidades.find(function (option) {
+                                return option.value === selectedCidade;
+                            })}
+                            />
+                            <p>Você selecionou a cidade com ID {selectedCidade}</p>
                         </div>
 
                         <div className="flex-search-bar-4">
