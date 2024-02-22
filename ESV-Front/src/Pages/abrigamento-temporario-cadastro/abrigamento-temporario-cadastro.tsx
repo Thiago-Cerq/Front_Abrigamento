@@ -10,12 +10,13 @@ import Select from 'react-select';
 //import Url from "../../Components/Url/url2";
 
 // Máscaras
-import { maskCEP, maskHorario, maskPhone } from '../../Components/Masks/Masks';
+//import { maskCEP, maskHorario, maskPhone } from '../../Components/Masks/Masks'; Ta sendo ussado?
 
 // Assets
 import questionImage from '../../assets/Icons/question.svg';
 import AddButton from '../../assets/add_button.png'
 import axios from 'axios';
+
 
 
 const schema = yup
@@ -132,6 +133,7 @@ const selectStyles = {
 function AbrigamentoCadastro() {
 
     // Funções setEstado
+    const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number; } | null>(null);
     const [estado, setEstado] = useState([]);
     const [selectedEstado, setSelectedEstado] = useState('');
 
@@ -192,7 +194,7 @@ function AbrigamentoCadastro() {
     let navigate = useNavigate();
     const [googleMapsUrl, setGoogleMapsUrl] = useState("");
 
-    const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number; } | null>(null);
+   
     
     const [coordinatesError, setCoordinatesError] = useState(false);
 
@@ -201,37 +203,42 @@ function AbrigamentoCadastro() {
     });
 
     function onSubmit(userData: any) {
-        console.log(userData);
         const dataToSend = {
             "identificador": null,
             "nome": userData.nome,
-            "codigoMunicipio": userData.codigoMunicipio,
-            "nomeMunicipio": userData.nomeMunicipio, //???
-            "unidadeFederacao": userData.UF, //???
-            "logradouro": null,
-            "endereco": userData.endereco,
-            "numero": null, //???
-            "complemento": null,
+            "codigoMunicipio": null,
+            "nomeMunicipio": selectedEstado, //???
+            "unidadeFederacao": selectedCidade, //???
+            "logradouro": userData.endereco,
+            "cep": userData.cep,
+            "endereco": userData.bairro+", "+userData.endereco + ", " + userData.cep,
+            "numero": null, //Não possui
+            "complemento": null, //Não possui
             "bairro": userData.bairro,
-            "pontoDeReferencia": null,
+            "pontoDeReferencia": null, //Não possui
             "telefone": userData.telefone,
             "ramal": userData.ramal,
             "email": userData.email,
             "coordenadas": {
                 "type": "Point",
                 "coordinates": [
-                    [
-                        userData.coordinates.latitude,
-                        userData.coordinates.longitude
-                    ]
+                        coordinates?.latitude,
+                        coordinates?.longitude,
+                        
                 ]
             },
             "diasSemana": userData.diasSemana,
             "horasDia":  userData.diasSemana,
             "tipoEquipamentoId": "61ae149ea87dca62af24a805", //???
-            "tipoEquipamento":  userData.nome  //"Centro de Referência para Abrigamento Temporário???"
-
+            "tipoEquipamento":   {
+                "$ref": "tipos",
+                "$id": {
+                  "$oid": "61ae149ea87dca62af24a805"
+                }
+              },
+              "_class": "br.jus.cnj.esv.rede.suas.domain.Equipamento"
         };
+
         console.log(dataToSend);
         navigate('/modulo-abrigamento-temporario')
         //postInfo(dataToSend)
@@ -258,7 +265,6 @@ function AbrigamentoCadastro() {
         console.log("URL: ",event.target.value);
         console.log("O que é isso?: ",googleMapsUrl);
         handleExtractCoordinates();
-        handleExtractCoordinates();
     };
     
     useEffect(() => {
@@ -266,12 +272,15 @@ function AbrigamentoCadastro() {
             handleExtractCoordinates();
         }
     }, [googleMapsUrl]);
+    
 
     const handleExtractCoordinates = () => {
         const extractedCoordinates = extractCoordinatesFromUrl(googleMapsUrl);
 
         if (extractedCoordinates) {
         setCoordinates(extractedCoordinates);
+        console.log("Coordenadas: ",extractedCoordinates);
+        console.log(coordinates);
         setCoordinatesError(false);
         } else {
         setCoordinates(null);
@@ -338,25 +347,26 @@ function AbrigamentoCadastro() {
                         </div>
 
                         <div className="flex-search-bar-4">
-                            <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
-                            <Select options={estados} className="multi-select" placeholder="Selecione"
-                            styles={selectStyles} onChange={handleEstadoChange} 
-                            value={estados.find(function (option) {
-                                    return option.value === selectedEstado;
-                           })}
-                           />
-                            <p>Você selecionou o estado com sigla {selectedEstado}</p>
+                            <form id = "form" onSubmit={handleSubmit(onSubmit)}></form>
+                                <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
+                                <Select options={estados} className="multi-select" placeholder="Selecione"
+                                styles={selectStyles} onChange={handleEstadoChange} 
+                                value={estados.find(function (option){return option.value === selectedEstado;})}
+                            />
+                                <p>Você selecionou o estado com sigla {selectedEstado}</p>
+                            <form/>
                         </div>
-
+ 
+                        
                         <div className="flex-search-bar-4">
                             <h2 className='subtitle-question'>Cidade <b className='asterisco'>*</b></h2>
-                            <Select options={cidades} className="multi-select" placeholder="Selecione"
-                            styles={selectStyles} onChange={handleCidadeChange}
-                            value={cidades.find(function (option) {
-                                return option.value === selectedCidade;
-                            })}
-                            />
-                            <p>Você selecionou a cidade com ID {selectedCidade}</p>
+                            <form id = "form" onSubmit={handleSubmit(onSubmit)}></form>
+                                <Select options={cidades} className="multi-select" placeholder="Selecione"
+                                styles={selectStyles} onChange={handleCidadeChange}
+                                value={cidades.find(function (option) {return option.value === selectedCidade;})}
+                                />
+                                <p>Você selecionou a cidade com ID {selectedCidade}</p>
+                            <form/>
                         </div>
 
                         <div className="flex-search-bar-4">
@@ -381,7 +391,7 @@ function AbrigamentoCadastro() {
                                     className={`question-bar ${errors.endereco ? 'error-input' : ''}`}
                                     {...register('endereco', { required: true })}
                                     type="text"
-                                    placeholder="Digite"
+                                    placeholder="Digite neste campo o nome da Rua e , Avenida, Quadra e numero do logradouro. Exemplo: Rua Maria da Penha, 100."
                             />
                         </form>
                     </div>
