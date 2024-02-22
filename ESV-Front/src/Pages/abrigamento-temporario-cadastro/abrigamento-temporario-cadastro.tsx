@@ -131,6 +131,7 @@ const selectStyles = {
 
 function AbrigamentoCadastro() {
 
+    // Funções setEstado
     const [estado, setEstado] = useState([]);
     const [selectedEstado, setSelectedEstado] = useState('');
 
@@ -148,15 +149,47 @@ function AbrigamentoCadastro() {
 
         fetchStates(); // Chamada da função de busca ao montar o componente
       }, []);
-    
+
       // Manipulador de mudanças no select
-      const handleStateChange = (event) => {
-        setSelectedEstado(event.target.value);
+    //   const handleEstadoChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    //     setSelectedEstado(event.target.value);
+    //   };
+
+      const handleEstadoChange = (e) => {
+        setSelectedEstado(e.value);
       };
 
       const estados = estado.map((state) => (
         {value: state.sigla, label: state.nome}
     ))
+
+    // Funções setCidade
+    const [cidade, setCidade] = useState([]);
+    const [selectedCidade, setSelectedCidade] = useState('');
+      useEffect(() => {
+        // Função para buscar as cidades da API
+        async function fetchCities() {
+          try {
+            const response = await fetch('http://localhost:8080/localidade/v1/municipios/uf/DF');
+            const data = await response.json();
+            setCidade(data);
+          } catch (error) {
+            console.error('Erro ao buscar cidades:', error);
+          }
+        }
+
+        fetchCities(); // Chamada da função de busca ao montar o componente
+      }, []);
+
+      // Manipulador de mudanças no select
+      const handleCidadeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSelectedCidade(event.target.value);
+      };
+
+      const cidades = cidade.map((cidade) => (
+        {value: cidade.id, label: cidade.nome}
+    ))
+
 
     let navigate = useNavigate();
     const [googleMapsUrl, setGoogleMapsUrl] = useState("");
@@ -267,9 +300,6 @@ function AbrigamentoCadastro() {
         setPhones([...phones])
     }
 
-    // Máscaras
-    const [cep, setCEP] = useState("")
-
     return (
             <>
             <div className='container'>
@@ -300,8 +330,7 @@ function AbrigamentoCadastro() {
                             <h2 className='subtitle-question'>CEP <b className='asterisco'>*</b></h2>
                             <span>{errors.cep?.message}</span>
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}>
-                            {/*maxLength={9} onChange={(e) => setCEP(maskCEP(e.target.value))}*/}
-                                <input value={cep} 
+                                <input
                                     className={`question-bar ${errors.cep ? 'error-input' : ''}`}
                                     {...register('cep', { required: true })}
                                     type="text"
@@ -313,12 +342,17 @@ function AbrigamentoCadastro() {
                         <div className="flex-search-bar-4">
                             <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
                             <Select options={estados} className="multi-select" placeholder="Selecione"
-                            styles={selectStyles} />
+                            styles={selectStyles} onChange={handleEstadoChange} value={estados.find(function (option) {
+                                    return option.value === selectedEstado;
+                           })
+                            }/>
+                            <p>Você selecionou o estado com ID {selectedEstado.toLowerCase()}</p>
                         </div>
 
                         <div className="flex-search-bar-4">
                             <h2 className='subtitle-question'>Cidade <b className='asterisco'>*</b></h2>
-                            <Select className="multi-select" placeholder="Selecione"/>
+                            <Select options={cidades} className="multi-select" placeholder="Selecione"
+                            styles={selectStyles} />
                         </div>
 
                         <div className="flex-search-bar-4">
