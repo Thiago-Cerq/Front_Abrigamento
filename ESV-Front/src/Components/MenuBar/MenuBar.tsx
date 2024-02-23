@@ -15,7 +15,7 @@ function MenuBar() {
   return (
     <>
 
-      <div>
+      {/* <div> */}
         <div onClick={() => {setOpen(!open)}}>
           <img src={MenuButtonHover} alt="Menu Button Hover" className={`menu-button-hover ${open? 'active' : 'inactive'}`}/>
           <img src={MenuCloseHover} alt="Menu Button Hover" className={`menu-close-hover ${open? 'active' : 'inactive'}`}/>
@@ -35,7 +35,7 @@ function MenuBar() {
               </div>
           </div>
         </div>
-      </div>
+      {/* </div> */}
 
     </>
   )

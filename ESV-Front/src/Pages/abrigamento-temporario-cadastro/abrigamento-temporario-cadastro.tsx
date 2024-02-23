@@ -136,6 +136,7 @@ function AbrigamentoCadastro() {
     const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number; } | null>(null);
     const [estado, setEstado] = useState([]);
     const [selectedEstado, setSelectedEstado] = useState('');
+    const [selectedUF, setSelectedUF] = useState('')
 
     useEffect(() => {
         // Função para buscar os estados da API
@@ -158,11 +159,12 @@ function AbrigamentoCadastro() {
     //   };
 
       const handleEstadoChange = (e: any) => {
-        setSelectedEstado(e.value);
+        setSelectedEstado(e.value)
+        setSelectedUF(e.sigla)
       };
 
       const estados = estado.map((state) => (
-        {value: state.sigla, label: state.nome}
+        {value: state.nome, label: state.nome, sigla: state.sigla}
     ))
 
     // Funções setCidade
@@ -174,7 +176,7 @@ function AbrigamentoCadastro() {
         if (!selectedEstado) return;
 
         setLoadingCidades(true)
-        fetch(`http://localhost:8080/localidade/v1/municipios/uf/${selectedEstado}`)
+        fetch(`http://localhost:8080/localidade/v1/municipios/uf/${selectedUF}`)
             .then((response) => response.json())
             .then((data) => setCidade(data))
             .then(() => setLoadingCidades(false))
@@ -187,7 +189,7 @@ function AbrigamentoCadastro() {
       };
 
       const cidades = cidade.map((cidade) => (
-        {value: cidade.id, label: cidade.nome}
+        {value: cidade.codigo, label: cidade.nome}
     ))
 
 
@@ -353,7 +355,7 @@ function AbrigamentoCadastro() {
                                 styles={selectStyles} onChange={handleEstadoChange} 
                                 value={estados.find(function (option){return option.value === selectedEstado;})}
                             />
-                                <p>Você selecionou o estado com sigla {selectedEstado}</p>
+                                <p>Você selecionou o estado com sigla {selectedUF}</p>
                             <form/>
                         </div>
  
@@ -365,7 +367,7 @@ function AbrigamentoCadastro() {
                                 styles={selectStyles} onChange={handleCidadeChange}
                                 value={cidades.find(function (option) {return option.value === selectedCidade;})}
                                 />
-                                <p>Você selecionou a cidade com ID {selectedCidade}</p>
+                                <p>Você selecionou a cidade com Código {selectedCidade}</p>
                             <form/>
                         </div>
 
