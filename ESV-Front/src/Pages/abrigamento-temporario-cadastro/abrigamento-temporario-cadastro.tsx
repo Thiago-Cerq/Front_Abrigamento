@@ -160,6 +160,7 @@ function AbrigamentoCadastro() {
 
       const handleEstadoChange = (e: any) => {
         setSelectedEstado(e.value)
+        console.log(e.value)
         setSelectedUF(e.sigla)
       };
 
@@ -299,15 +300,26 @@ function AbrigamentoCadastro() {
 
     // Add Phone
     const [phones, setPhones] = useState([''])
+    const [telephone, setTelephone] = useState([''])
+    const [whatsapp, setWhatsapp] = useState([''])
     const addPhoneButton = (e: any) => {
         e.preventDefault()
         setPhones([...phones, ""])
     }
 
-    const handleChangePhone = (e: any, index: any) => {
-        phones[index] = e.target.value
-        setPhones([...phones])
+    const handleChangeTelephone = (e, index) => {
+        telephone[index] = e.target.value
+        setTelephone([...telephone])
+        console.log(telephone)
     }
+
+    const handleChangeWhatsapp = (e, index) => {
+        whatsapp[index] = e.target.value
+        setWhatsapp([...whatsapp])
+        console.log(whatsapp)
+    }
+
+    
 
     return (
             <>
@@ -486,7 +498,7 @@ function AbrigamentoCadastro() {
                     
                     <div className='flex-bar-phones'>
                     {
-                        phones.map((phones,index) => (
+                        phones.map((phone,index) => (
                             <div className='flex-bar-phones'>
                                 <div className="flex-search-bar-c3">
                                     <h2 className='subtitle-question'>{`Telefone ${index+1}`}</h2>
@@ -496,6 +508,7 @@ function AbrigamentoCadastro() {
                                             className={'question-bar'}
                                             type="text"
                                             placeholder="(00) 9 0000-0000"
+                                            onChange={(e) => handleChangeTelephone(e, index)}
                                         />
                                     </form>
                                 </div>
@@ -508,7 +521,7 @@ function AbrigamentoCadastro() {
                                             className={'question-bar'}
                                             type="text"
                                             placeholder="(00) 9 0000-0000"
-                                            onChange={(e) => handleChangePhone(e, index)}
+                                            onChange={(e) => handleChangeWhatsapp(e, index)}
                                         />
                                     </form>
                                 </div>
