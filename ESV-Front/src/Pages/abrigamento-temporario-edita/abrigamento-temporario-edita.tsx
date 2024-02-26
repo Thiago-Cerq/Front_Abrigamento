@@ -171,6 +171,7 @@ function AbrigamentoEdita( ) {
                 //setInfo(response.data.content[id]);
                 reset(response.data);
                 console.log(response.data);
+                console.log(response.data);
                 setHead(response.data.page);
                 console.log("A requisição foi um sucesso!");  
             })
