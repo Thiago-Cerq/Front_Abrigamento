@@ -1,11 +1,12 @@
 import './abrigamento-temporario-cadastro.css'
 import React, { useEffect, useState } from 'react';
-import{ useForm } from 'react-hook-form';
+import{ set, useForm } from 'react-hook-form';
 import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from "yup"
 import { useNavigate } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Form, Link } from 'react-router-dom';
 import Select from 'react-select';
+import {converterArrayParaString} from "../../Components/ArrayForm/arrayFormatter";
 
 //import Url from "../../Components/Url/url2";
 
@@ -170,6 +171,7 @@ function AbrigamentoCadastro() {
     // Funções setCidade
     const [cidade, setCidade] = useState([]);
     const [selectedCidade, setSelectedCidade] = useState('');
+    const [selectedCodigoMunicipio, setCodigoMunicipio] = useState('');
     const [loadingCidades, setLoadingCidades] = useState(false)
       useEffect(() => {
         // Função para buscar as cidades da API
@@ -186,10 +188,13 @@ function AbrigamentoCadastro() {
       // Manipulador de mudanças no select
       const handleCidadeChange = (e: any) => {
         setSelectedCidade(e.value);
+        setCodigoMunicipio(e.codigoMunicipio);
+        console.log("E" ,e);
       };
+      
 
       const cidades = cidade.map((cidade) => (
-        {value: cidade.nome, label: cidade.nome}
+        {value: cidade.nome + ","+ cidade.codigo, label: cidade.nome}
     ))
 
 
@@ -206,21 +211,63 @@ function AbrigamentoCadastro() {
 
     function onSubmit(userData: any) {
 
-        function getDiasSemanaUnicos(diasSemana: any) {
-            const diasUnicos: any[] = [];
+        // function criarHorariosFuncionamento(diasSemana :any, horariosInicio :any, horariosFim :any) {
+        //     const horarios_funcionamento: any = [];
           
-            Object.values(diasSemana).forEach((diaArray: any) => {
-              diaArray.forEach((dia: any) => {
-                if (!diasUnicos.includes(dia)) {
-                  diasUnicos.push(dia);
+        //     Object.keys(diasSemana).forEach(index => {
+        //         const diaSemana = diasSemana[index];
+        //         const inicio = horariosInicio[index];
+        //         const fim = horariosFim[index];
+            
+        //         diaSemana.forEach((dia: string | number) => {
+        //           const horario = [inicio, fim];
+        //           horarios_funcionamento[dia] = horario;
+        //         });
+        //       });
+            
+        //       return horarios_funcionamento;
+        //   }
+        function criarHorariosFuncionamento(diasSemana : any, horariosInicio: any, horariosFim: any) {
+            const horarios_funcionamento: any[][] = [];
+            const mapaDias = {};
+          
+            Object.keys(diasSemana).forEach(index => {
+              const diaSemana = diasSemana[index];
+              const inicio = horariosInicio[index];
+              const fim = horariosFim[index];
+          
+              diaSemana.forEach((dia) => {
+                if (!mapaDias[dia]) {
+                  mapaDias[dia] = true;
+                  const horario = [dia, [inicio, fim]];
+                  horarios_funcionamento.push(horario);
+                } else {
+                  const diaExistente: any = horarios_funcionamento.find(item => item[0] === dia);
+                  diaExistente[1].push(inicio, fim);
                 }
               });
             });
           
-            return diasUnicos;
-          }
+            return horarios_funcionamento;
+          } 
+          const horarios_funcionamento = criarHorariosFuncionamento(valoresSelecionados, horaInicio, horaFim);
+          console.log(horarios_funcionamento);
+
+        // function getDiasSemanaUnicos(diasSemana: any) {
+        //     const diasUnicos: any[] = [];
           
-          const diasSemanaUnicos = getDiasSemanaUnicos(valoresSelecionados);
+        //     Object.values(diasSemana).forEach((diaArray: any) => {
+        //       diaArray.forEach((dia: any) => {
+        //         if (!diasUnicos.includes(dia)) {
+        //           diasUnicos.push(dia);
+        //         }
+        //       });
+        //     });
+          
+        //     return diasUnicos;
+        //   }
+          
+         // const diasSemanaUnicos = getDiasSemanaUnicos(valoresSelecionados);
 
         
         //   function getHorariosDia(diasSemana: any, horaInicio: any, horaFim: any) {
@@ -238,60 +285,100 @@ function AbrigamentoCadastro() {
           
         //   const horariosDia = getHorariosDia(valoresSelecionados, horaInicio, horaFim);
 
+        const cidadeData = selectedCidade.split(",");
         
         const dataToSend = {
-            "identificador": null,
+            "identificador": cidadeData[1],
             "nome": userData.nome,
-            "codigoMunicipio": null,
-            "nomeMunicipio": selectedCidade, //???
+            "codigoMunicipio": parseInt(cidadeData[1],10) , //???
+            "nomeMunicipio": cidadeData[0], //???
             "unidadeFederacao": selectedEstado, //???
             "logradouro": userData.endereco,
-            "cep": userData.cep,
+            //"cep": userData.cep,
             "endereco": userData.bairro+", "+userData.endereco + ", " + userData.cep,
             "numero": null, //Não possui
             "complemento": null, //Não possui
             "bairro": userData.bairro,
             "pontoDeReferencia": null, //Não possui
-            "telefone": telephone,
-            "whatsapp": whatsapp,
-            "ramal": userData.ramal,
+            "telefone": converterArrayParaString(telephone),
+            //"whatsapp": whatsapp,
+            "ramal": null,
             "email": userData.email,
             "coordenadas": {
                 "type": "Point",
                 "coordinates": [
+                    [
                         coordinates?.latitude,
                         coordinates?.longitude,
+                    ]
                         
                 ]
             },
-            "diasSemana": diasSemanaUnicos,
-            "horasDia":  horaInicio,
-            "tipoEquipamentoId": "61ae149ea87dca62af24a805", //???
-            "tipoEquipamento":   {
-                "$ref": "tipos",
-                "$id": {
-                  "$oid": "61ae149ea87dca62af24a805"
-                }
-              },
-              "_class": "br.jus.cnj.esv.rede.suas.domain.Equipamento"
+            "diasSemana": converterArrayParaString(horarios_funcionamento),
+            "horasDia":  null,
+            "tipoEquipamentoId": "61ae149ea87dca62af24a805",
+            "tipoEquipamento": "Centro de Referência para Abrigamento Temporário",
+            "_class": "br.jus.cnj.esv.rede.suas.domain.Equipamento"
         };
 
         console.log(dataToSend);
+        postInfo(dataToSend)
         navigate('/modulo-abrigamento-temporario')
-        //postInfo(dataToSend)
+        
         
     }
 
+    const jsonCorreto = {
+        "identificador": "13213",
+        "nome": "Abrigo de Longa Permanencia para Pessoas Idosas",
+        "codigoMunicipio": 2111300,
+        "nomeMunicipio": "São Luís",
+        "unidadeFederacao": "Maranhão",
+        "logradouro": "casa",
+        "endereco": "Avenida Guaxenduba, nº 1490, Bairro de Fátima",
+        "numero": null,
+        "complemento": null,
+        "whatsapp": null,
+        "bairro": null,
+        "pontoDeReferencia": null,
+        "telefone": "98991561184",
+        "ramal": null,
+        "email": null,
+        "coordenadas": {
+            "type": "Point",
+            "coordinates": [
+                [
+                    -44.2844225,
+                    -2.5422134
+                ]
+            ]
+        },
+        "diasSemana": null,
+        "horasDia": null,
+        "tipoEquipamentoId": "61ae149ea87dca62af24a805",
+        "tipoEquipamento": "Centro de Referência para Abrigamento Temporário"
+    };
+
     const postInfo = (dataToSend: any) => {
-        axios.post("http://localhost:8080/suas/v1/equipamentos/", dataToSend)
+        const jsonData = JSON.stringify(dataToSend);
+        axios.post("http://localhost:8080/suas/v1/equipamentos/", jsonData)
         .then((response) => {
-            setEstado(response.data.content)
+            //setEstado(response.data)
+            console.log("content: ", response.data)
             console.log("A requisição foi um sucesso!")
         })
-        .catch(() => {
-            console.log("Deu errado!")
+        .catch((error) => {
+            console.log("Deu errado!");
+            console.log(error);
         })
+        
     }
+
+    axios.interceptors.request.use(config => {
+        config.headers['Content-Type'] = 'application/json'; // Defina o Content-Type como application/json
+        // Você pode adicionar outros headers aqui, como Authorization, se necessário
+        return config;
+    });
 
     
 
@@ -435,7 +522,7 @@ function AbrigamentoCadastro() {
                                 onChange={handleEstadoChange} 
                                 value={estados.find(function (option){return option.value === selectedEstado;})}
                             />
-                                <p>Você selecionou o estado com sigla {selectedUF}</p>
+                                {/* <p>Você selecionou o estado com sigla {selectedUF}</p> */}
                             <form/>
                         </div>
  
@@ -447,7 +534,7 @@ function AbrigamentoCadastro() {
                                 styles={selectStyles} onChange={handleCidadeChange}
                                 value={cidades.find(function (option) {return option.value === selectedCidade;})}
                                 />
-                                <p>Você selecionou a cidade com Código {selectedCidade}</p>
+                                {/* <p>Você selecionou a cidade com Código {selectedCidade}</p> */}
                             <form/>
                         </div>
 

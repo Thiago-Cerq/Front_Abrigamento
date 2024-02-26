@@ -94,7 +94,7 @@ function Abrigamento() {
         <tr className={isEven ? 'even-row' : 'odd-row'}>
           <td className='teste'>{item.nome}</td>
           <td className='td-action'>
-            <img src={eyeImage}/>
+            {/* <img src={eyeImage}/> */}
               <Link  className=' link-to' to={{pathname: `/modulo-abrigamento-temporario-edita/${item.id}`}}> 
               {/* <Link  className=' link-to' to={{pathname: `/modulo-abrigamento-temporario-edita/${index}`}}> */}
                 <img src={pencilImage}/> 
