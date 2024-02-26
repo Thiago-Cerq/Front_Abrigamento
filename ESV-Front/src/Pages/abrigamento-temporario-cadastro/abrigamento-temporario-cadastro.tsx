@@ -205,6 +205,40 @@ function AbrigamentoCadastro() {
     });
 
     function onSubmit(userData: any) {
+
+        function getDiasSemanaUnicos(diasSemana: any) {
+            const diasUnicos: any[] = [];
+          
+            Object.values(diasSemana).forEach((diaArray: any) => {
+              diaArray.forEach((dia: any) => {
+                if (!diasUnicos.includes(dia)) {
+                  diasUnicos.push(dia);
+                }
+              });
+            });
+          
+            return diasUnicos;
+          }
+          
+          const diasSemanaUnicos = getDiasSemanaUnicos(valoresSelecionados);
+
+        
+        //   function getHorariosDia(diasSemana: any, horaInicio: any, horaFim: any) {
+        //     const horariosDia = [];
+          
+        //     Object.values(diasSemana).forEach((dias: any, index) => {
+        //       dias.forEach((dia: any) => {
+        //         horariosDia[dia][0] = horaInicio[index % horaInicio.length];
+        //         horariosDia[dia][1] = horaFim[index % horaFim.length];
+        //       });
+        //     });
+          
+        //     return horariosDia;
+        //   }
+          
+        //   const horariosDia = getHorariosDia(valoresSelecionados, horaInicio, horaFim);
+
+        
         const dataToSend = {
             "identificador": null,
             "nome": userData.nome,
@@ -230,8 +264,8 @@ function AbrigamentoCadastro() {
                         
                 ]
             },
-            "diasSemana": userData.diasSemana,
-            "horasDia":  userData.diasSemana,
+            "diasSemana": diasSemanaUnicos,
+            "horasDia":  horaInicio,
             "tipoEquipamentoId": "61ae149ea87dca62af24a805", //???
             "tipoEquipamento":   {
                 "$ref": "tipos",
@@ -310,6 +344,8 @@ function AbrigamentoCadastro() {
             [index]: novosValoresSelecionados
         })); // Atualiza o estado com os novos valores selecionados para o multiselect específico
     };
+
+    console.log(valoresSelecionados)
 
     const [horaInicio, setHoraInicio] = useState([''])
     const [horaFim, setHoraFim] = useState([''])
@@ -499,15 +535,6 @@ function AbrigamentoCadastro() {
                                 value={diasDaSemana.find(function (option){return option.value === selectedHorarios;})}
                                 />
                             </div>
-
-                            {/* <div>
-                <h2>Valores Selecionados:</h2>
-                <ul>
-                    {diasDaSemanaSelecionados.map((valor, index) => (
-                        <li key={index}>{valor}</li>
-                    ))}
-                </ul>
-            </div> */}
     
                             <div className='bar-hour'>
                                 <h2 className='subtitle-question'>Horário</h2>
