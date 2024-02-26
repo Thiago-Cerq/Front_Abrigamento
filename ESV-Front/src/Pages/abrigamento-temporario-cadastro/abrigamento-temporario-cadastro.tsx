@@ -21,8 +21,8 @@ import axios from 'axios';
 
 const schema = yup
   .object({
-    //UF: yup.string().required("O campo é obrigatório!"), 
-    //cidade: yup.string().required("O campo é obrigatório!"), 
+    // estado: yup.string().required("O campo é obrigatório!"), 
+    // cidade: yup.string().required("O campo é obrigatório!"), 
     bairro: yup.string().required("O campo é obrigatório!"),
     endereco: yup.string().required("O campo é obrigatório!"),
     cep: yup.string().matches(/\d{5}-\d{3}/, "O CEP não está no formato!").required("O campo é obrigatório!"),
@@ -61,17 +61,17 @@ const extractCoordinatesFromUrl = (url: string) => {
   }
 };
 
+// MultiSelect Horarios de Funcionamento
+
 const diasDaSemana = [
-    { value: 'segunda', label: 'Segunda' },
-    { value: 'terca', label: 'Terça' },
-    { value: 'quarta', label: 'Quarta' },
-    { value: 'quinta', label: 'Quinta' },
-    { value: 'sexta', label: 'Sexta' },
-    { value: 'sabado', label: 'Sábado' },
-    { value: 'domingo', label: 'Domingo' },
+    { value: 'SEGUNDA', label: 'Segunda' },
+    { value: 'TERCA', label: 'Terça' },
+    { value: 'QUARTA', label: 'Quarta' },
+    { value: 'QUINTA', label: 'Quinta' },
+    { value: 'SEXTA', label: 'Sexta' },
+    { value: 'SABADO', label: 'Sábado' },
+    { value: 'DOMINGO', label: 'Domingo' },
 ]
-
-
 
 const multiSelectStyles = {
     control: (styles: object) => ({...styles, backgroundColor: 'white'}),
@@ -160,7 +160,6 @@ function AbrigamentoCadastro() {
 
       const handleEstadoChange = (e: any) => {
         setSelectedEstado(e.value)
-        console.log(e.value)
         setSelectedUF(e.sigla)
       };
 
@@ -190,7 +189,7 @@ function AbrigamentoCadastro() {
       };
 
       const cidades = cidade.map((cidade) => (
-        {value: cidade.codigo, label: cidade.nome}
+        {value: cidade.nome, label: cidade.nome}
     ))
 
 
@@ -210,8 +209,8 @@ function AbrigamentoCadastro() {
             "identificador": null,
             "nome": userData.nome,
             "codigoMunicipio": null,
-            "nomeMunicipio": selectedEstado, //???
-            "unidadeFederacao": selectedCidade, //???
+            "nomeMunicipio": selectedCidade, //???
+            "unidadeFederacao": selectedEstado, //???
             "logradouro": userData.endereco,
             "cep": userData.cep,
             "endereco": userData.bairro+", "+userData.endereco + ", " + userData.cep,
@@ -219,7 +218,8 @@ function AbrigamentoCadastro() {
             "complemento": null, //Não possui
             "bairro": userData.bairro,
             "pontoDeReferencia": null, //Não possui
-            "telefone": userData.telefone,
+            "telefone": telephone,
+            "whatsapp": whatsapp,
             "ramal": userData.ramal,
             "email": userData.email,
             "coordenadas": {
@@ -292,28 +292,57 @@ function AbrigamentoCadastro() {
     };
 
     // Add Horario
+    const [selectedHorarios, setSelectedHorarios] = useState('');
     const [time, setTime] = useState([''])
+
     const addTimeButton = (e: any) => {
         e.preventDefault()
         setTime([...time, ""])
+    }
+
+    const [valoresSelecionados, setValoresSelecionados] = useState(['']);
+
+    // Função para lidar com a mudança de valor no multiselect
+    const handleMultiselectChange = (selectedOptions, index) => {
+        const novosValoresSelecionados = selectedOptions.map(option => option.value);
+        setValoresSelecionados(prevState => ({
+            ...prevState,
+            [index]: novosValoresSelecionados
+        })); // Atualiza o estado com os novos valores selecionados para o multiselect específico
+    };
+
+    const [horaInicio, setHoraInicio] = useState([''])
+    const [horaFim, setHoraFim] = useState([''])
+
+    const handleChangeInicio = (e, index) => {
+        horaInicio[index] = e.target.value
+        setHoraInicio([...horaInicio])
+        console.log(horaInicio)
+    }
+
+    const handleChangeFim = (e, index) => {
+        horaFim[index] = e.target.value
+        setHoraFim([...horaFim])
+        console.log(horaFim)
     }
 
     // Add Phone
     const [phones, setPhones] = useState([''])
     const [telephone, setTelephone] = useState([''])
     const [whatsapp, setWhatsapp] = useState([''])
+
     const addPhoneButton = (e: any) => {
         e.preventDefault()
         setPhones([...phones, ""])
     }
 
-    const handleChangeTelephone = (e, index) => {
+    const handleChangeTelephone = (e: any, index: any) => {
         telephone[index] = e.target.value
         setTelephone([...telephone])
         console.log(telephone)
     }
 
-    const handleChangeWhatsapp = (e, index) => {
+    const handleChangeWhatsapp = (e: any, index: any) => {
         whatsapp[index] = e.target.value
         setWhatsapp([...whatsapp])
         console.log(whatsapp)
@@ -363,8 +392,11 @@ function AbrigamentoCadastro() {
                         <div className="flex-search-bar-4">
                             <form id = "form" onSubmit={handleSubmit(onSubmit)}></form>
                                 <h2 className='subtitle-question'>Estado <b className='asterisco'>*</b></h2>
-                                <Select options={estados} className="multi-select" placeholder="Selecione"
-                                styles={selectStyles} onChange={handleEstadoChange} 
+                                <Select options={estados} 
+                                className="multi-select" 
+                                placeholder="Selecione"
+                                styles={selectStyles} 
+                                onChange={handleEstadoChange} 
                                 value={estados.find(function (option){return option.value === selectedEstado;})}
                             />
                                 <p>Você selecionou o estado com sigla {selectedUF}</p>
@@ -456,28 +488,44 @@ function AbrigamentoCadastro() {
                     <div className='heavy-line'></div>
                     <h2 className='subtitle-question'>HORÁRIOS DE FUNCIONAMENTO</h2>
                     {
-                        time.map(phone => (
+                        time.map((time, index) => (
 
                             <div className='flex-bar-multiselect'>
                             <div className="flex-search-bar-multiselect">
                                 <h2 className='subtitle-question'>Dia(s) da semana</h2>
                                 <Select isMulti options={diasDaSemana} className='multi-select' placeholder = "Selecione"
-                                styles={multiSelectStyles}/>
+                                styles={multiSelectStyles}
+                                onChange={(e) => handleMultiselectChange(e, index)}
+                                value={diasDaSemana.find(function (option){return option.value === selectedHorarios;})}
+                                />
                             </div>
+
+                            {/* <div>
+                <h2>Valores Selecionados:</h2>
+                <ul>
+                    {diasDaSemanaSelecionados.map((valor, index) => (
+                        <li key={index}>{valor}</li>
+                    ))}
+                </ul>
+            </div> */}
     
                             <div className='bar-hour'>
                                 <h2 className='subtitle-question'>Horário</h2>
                                 
                                 <form>
                                 <p className='subtitle-hour'>Início:</p>
-                                    <input type="text" placeholder="00:00" className='question-bar-hour'/>
+                                    <input type="text" placeholder="00:00" className='question-bar-hour'
+                                    onChange={(e) => handleChangeInicio(e, index)}
+                                    />
                                 </form>
                             </div>
     
                             <div className='flex-bar-hour'>
                                 <form>
                                 <p className='subtitle-hour'>Fim:</p>
-                                    <input type="text" placeholder="00:00" className='question-bar-hour'/>
+                                    <input type="text" placeholder="00:00" className='question-bar-hour'
+                                    onChange={(e) => handleChangeFim(e, index)}
+                                    />
                                 </form>
                             </div>
                         </div>
@@ -507,7 +555,7 @@ function AbrigamentoCadastro() {
                                         <input 
                                             className={'question-bar'}
                                             type="text"
-                                            placeholder="(00) 9 0000-0000"
+                                            placeholder="(00) 9 0000-0000"                                            
                                             onChange={(e) => handleChangeTelephone(e, index)}
                                         />
                                     </form>
