@@ -44,7 +44,7 @@ const schema = yup
     dom: yup.string(),
     observacao: yup.string(),
 
-  }).required()
+}).required()
 
 const extractCoordinatesFromUrl = (url: string) => {
   const pattern = /@([-+]?\d{1,2}\.\d+),([-+]?\d{1,3}\.\d+)/;
@@ -159,12 +159,12 @@ function AbrigamentoCadastro() {
     //     setSelectedEstado(event.target.value);
     //   };
 
-      const handleEstadoChange = (e: any) => {
+    const handleEstadoChange = (e: any) => {
         setSelectedEstado(e.value)
         setSelectedUF(e.sigla)
-      };
+    };
 
-      const estados = estado.map((state) => (
+    const estados = estado.map((state) => (
         {value: state.nome, label: state.nome, sigla: state.sigla}
     ))
 
@@ -172,6 +172,7 @@ function AbrigamentoCadastro() {
     const [cidade, setCidade] = useState([]);
     const [selectedCidade, setSelectedCidade] = useState('');
     const [selectedCodigoMunicipio, setCodigoMunicipio] = useState('');
+    
     const [loadingCidades, setLoadingCidades] = useState(false)
       useEffect(() => {
         // Função para buscar as cidades da API
@@ -286,22 +287,25 @@ function AbrigamentoCadastro() {
         //   const horariosDia = getHorariosDia(valoresSelecionados, horaInicio, horaFim);
 
         const cidadeData = selectedCidade.split(",");
+        // const codMunicipio = parseInt(cidadeData[1],10);
+        // console.log("dasdasdasdasdasdas: ", codMunicipio);
+        // console.log("aqui: ", codMunicipio|0);
         
         const dataToSend = {
             "identificador": cidadeData[1],
             "nome": userData.nome,
-            "codigoMunicipio": parseInt(cidadeData[1],10) , //???
+            "codigoMunicipio": cidadeData[1], //???
             "nomeMunicipio": cidadeData[0], //???
             "unidadeFederacao": selectedEstado, //???
             "logradouro": userData.endereco,
-            //"cep": userData.cep,
+            "cep": userData.cep,
             "endereco": userData.bairro+", "+userData.endereco + ", " + userData.cep,
             "numero": null, //Não possui
             "complemento": null, //Não possui
             "bairro": userData.bairro,
             "pontoDeReferencia": null, //Não possui
             "telefone": converterArrayParaString(telephone),
-            //"whatsapp": whatsapp,
+            "whatsapp": whatsapp,
             "ramal": null,
             "email": userData.email,
             "coordenadas": {
@@ -325,12 +329,12 @@ function AbrigamentoCadastro() {
         postInfo(dataToSend)
         navigate('/modulo-abrigamento-temporario')
         
-        
+        //postInfo(jsonCorreto)
     }
 
     const jsonCorreto = {
         "identificador": "13213",
-        "nome": "Abrigo de Longa Permanencia para Pessoas Idosas",
+        "nome": "coordenadas ",
         "codigoMunicipio": 2111300,
         "nomeMunicipio": "São Luís",
         "unidadeFederacao": "Maranhão",
@@ -338,7 +342,7 @@ function AbrigamentoCadastro() {
         "endereco": "Avenida Guaxenduba, nº 1490, Bairro de Fátima",
         "numero": null,
         "complemento": null,
-        "whatsapp": null,
+        "whatsapp":null,
         "bairro": null,
         "pontoDeReferencia": null,
         "telefone": "98991561184",
@@ -348,9 +352,10 @@ function AbrigamentoCadastro() {
             "type": "Point",
             "coordinates": [
                 [
-                    -44.2844225,
-                    -2.5422134
+                    coordinates?.latitude,
+                    coordinates?.longitude,
                 ]
+                    
             ]
         },
         "diasSemana": null,
@@ -358,14 +363,15 @@ function AbrigamentoCadastro() {
         "tipoEquipamentoId": "61ae149ea87dca62af24a805",
         "tipoEquipamento": "Centro de Referência para Abrigamento Temporário"
     };
+    
 
     const postInfo = (dataToSend: any) => {
-        const jsonData = JSON.stringify(dataToSend);
-        axios.post("http://localhost:8080/suas/v1/equipamentos/", jsonData)
+        axios.post("http://localhost:8080/suas/v1/equipamentos/", dataToSend)
         .then((response) => {
             //setEstado(response.data)
             console.log("content: ", response.data)
             console.log("A requisição foi um sucesso!")
+            console.log("Response: ", response.status)
         })
         .catch((error) => {
             console.log("Deu errado!");

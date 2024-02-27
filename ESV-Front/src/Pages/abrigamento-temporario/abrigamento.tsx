@@ -27,7 +27,7 @@ function Abrigamento() {
   const getInfo = () => {
       //Passando porpagina
       //axios.get("http://localhost:8080/suas/v1/equipamentos/municipio/2111300/tipo/CRAT?page=${currentPage}&limit={${limit}}")	
-      axios.get("http://localhost:8080/suas/v1/equipamentos/municipio/2111300/tipo/CRAT")	
+      axios.get(`http://localhost:8080/suas/v1/equipamentos/municipio/5300108/tipo/CRAT??limit=3`)	
       .then((response) => {
       setInfo(response.data.content)
       console.log(response.data.content)
@@ -76,7 +76,6 @@ function Abrigamento() {
   const deletInfo = (itemId: any) => {
      
     console.log(`Imagem clicada! ID: ${itemId}`);
-    /*
     axios.delete(`http://localhost:8080/suas/v1/equipamentos/${itemId}`)
     .then(response => {
       console.log('Resposta:', response.data);
@@ -84,8 +83,14 @@ function Abrigamento() {
     .catch(error => {
       console.error('Erro:', error);
     });
-   */
   };
+
+  function deleteIn(itemId: any) {
+    axios.delete(`http://localhost:8080/suas/v1/equipamentos/${itemId}`)
+    setInfo(info.filter(info => info.id !== itemId))
+
+  }
+
   
   function addLine(item: any, index: number) {
     const isEven = index % 2 === 0;
@@ -99,7 +104,7 @@ function Abrigamento() {
               {/* <Link  className=' link-to' to={{pathname: `/modulo-abrigamento-temporario-edita/${index}`}}> */}
                 <img src={pencilImage}/> 
               </Link> 
-            <img className="trashImage"src={trashImage} onClick={() => deletInfo(item.id)}/> 
+            <img className="trashImage"src={trashImage} onClick={() => deleteIn(item.id)}/> 
           </td>
         </tr>
       </tbody> 

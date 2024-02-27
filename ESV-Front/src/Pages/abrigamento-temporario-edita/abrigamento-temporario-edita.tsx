@@ -11,6 +11,7 @@ import questionImage from '../../assets/Icons/question.svg';
 //import Url from "../../Components/Url/url2";
 // Máscaras
 import { maskCEP, maskHorario, maskPhone } from '../../Components/Masks/Masks';
+import {converterStringParaArray} from "../../Components/ArrayForm/stringToArray";
 
 // Assets
 import AddButton from '../../assets/add_button.png'
@@ -136,7 +137,7 @@ function AbrigamentoEdita( ) {
     const [googleMapsUrl, setGoogleMapsUrl] = useState("");
     const [coordinates, setCoordinates] = useState<{ latitude: number; longitude: number; } | null>(null);
     const [coordinatesError, setCoordinatesError] = useState(false)
-    //const [info, setInfo] = useState<any[]>([]);
+    const [info, setInfo] = useState<any[any]>([]);
     const [head, setHead] = useState<any[any]>([]);
     const { id } = useParams();
     console.log("ID = ",id);
@@ -169,9 +170,10 @@ function AbrigamentoEdita( ) {
         .get(`http://localhost:8080/suas/v1/equipamentos/${id}`)		
             .then((response) => {
                 //setInfo(response.data.content[id]);
+                setInfo(response.data.diasSemana);
                 reset(response.data);
-                console.log(response.data);
-                console.log(response.data);
+                console.log("Dias da semana: ",response.data.diasSemana);
+                // console.log(response.data);
                 setHead(response.data.page);
                 console.log("A requisição foi um sucesso!");  
             })
@@ -180,6 +182,10 @@ function AbrigamentoEdita( ) {
                 console.log("Deu errado!");
         });
     }
+    console.log("conteudo de info",getInfo)
+    console.log("tipo",typeof(getInfo))
+    const horariosDias = converterStringParaArray(info.toString())
+    console.log("Voltou para Array:",horariosDias)
     
     useEffect(() => {
         getInfo();
